@@ -1,0 +1,6 @@
+.gitignore
+src/*.o
+hash
+*~
+src/*~
+inc/*~
