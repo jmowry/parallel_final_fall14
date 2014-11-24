@@ -11,7 +11,7 @@ make clean - removes unneeded files ( *.o,  *~, executables)
 make edit  - opens all files in gedit (sorry if u don't like gedit)
 make dox   - generates doxygen files, puts them in doc/ directory (latex and html)
 make zip   - runs a tar -czf on the directory, drops the zipped file as prog4.tgz on directory up
-
+make read  - opens the doxygen html file in chrome
 
 ‌     ∧,_,∧
     (`･ω･´)　 ｎ_

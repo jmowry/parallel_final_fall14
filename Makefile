@@ -29,3 +29,5 @@ dox:
 	doxygen doc/config_file
 zip:
 	tar -czf ../prog4.tgz ../parallel_final_fall14/
+read:
+	google-chrome doc/html/index.html &
