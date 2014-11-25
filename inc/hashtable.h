@@ -7,7 +7,7 @@
  *
  *****************************************************************************/
  
- #ifndef _HASHTABLE_H_
+#ifndef _HASHTABLE_H_
 #define _HASHTABLE_H_
 
 /******************************************************************************
@@ -36,21 +36,31 @@
 class HashTable
 {
 protected:
-
+  int size;
+  hash_t *hash_ptr;
+  
 public:
 
 public:
   // CONSTRUCTORS
   HashTable();
+  HashTable(int sz);
 
   // DESTRUCTOR
   ~HashTable();
 
-//METHODS
 private:
-
+  hash_t *CreateHashTable();
+  void FreeTable();
+  
 public:
-
+  unsigned int Hash(std::string str);
+  node *LookupString(std::string str);
+  bool AddString(std::string str);
+  bool DeleteString(std::string str);
+  
+  int GetTableSize();
+  int GetTableCount();
 };
 
 #endif

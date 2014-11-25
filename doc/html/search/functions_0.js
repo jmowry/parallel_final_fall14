@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hashtable',['HashTable',['../classHashTable.html#adc3bf2b214c572819ba957ad314d7db3',1,'HashTable']]]
+  ['addstring',['AddString',['../classHashTable.html#aa434d220762650368342c0b359537c13',1,'HashTable']]]
 ];

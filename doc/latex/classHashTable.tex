@@ -15,7 +15,30 @@ Hash Table class.
 \item 
 \hyperlink{classHashTable_adc3bf2b214c572819ba957ad314d7db3}{Hash\-Table} ()
 \item 
+\hyperlink{classHashTable_ad34603ecbe631c2609cf8bf6eb0e4234}{Hash\-Table} (int sz)
+\item 
 \hyperlink{classHashTable_a9ce5569bb945880cacb29aaba6f3e3f9}{$\sim$\-Hash\-Table} ()
+\item 
+unsigned int \hyperlink{classHashTable_af9de52d84a6f01768c1df4c228ae2b68}{Hash} (std\-::string str)
+\item 
+\hyperlink{structnode}{node} $\ast$ \hyperlink{classHashTable_a74b073c516dc278f73d08a4ea96cca77}{Lookup\-String} (std\-::string str)
+\item 
+bool \hyperlink{classHashTable_aa434d220762650368342c0b359537c13}{Add\-String} (std\-::string str)
+\item 
+bool \hyperlink{classHashTable_aeac528624c0abb98d25195c931087653}{Delete\-String} (std\-::string str)
+\item 
+int \hyperlink{classHashTable_a685b9fc2d98808166718fd3f7cbd0f5e}{Get\-Table\-Size} ()
+\item 
+int \hyperlink{classHashTable_a9c1d6c48eb05f677330cfba9cb8d30cf}{Get\-Table\-Count} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHashTable_ad732056fce42df5162c810b4dd28fca1}{int {\bfseries size}}\label{classHashTable_ad732056fce42df5162c810b4dd28fca1}
+
+\item 
+\hypertarget{classHashTable_a3cac095e178b62dffa384f63e903918a}{\hyperlink{structhash__t}{hash\-\_\-t} $\ast$ {\bfseries hash\-\_\-ptr}}\label{classHashTable_a3cac095e178b62dffa384f63e903918a}
+
 \end{DoxyCompactItemize}
 
 
@@ -46,6 +69,24 @@ Initialize Hash Table.
 \begin{DoxyReturn}{Returns}
 none 
 \end{DoxyReturn}
+\hypertarget{classHashTable_ad34603ecbe631c2609cf8bf6eb0e4234}{\index{Hash\-Table@{Hash\-Table}!Hash\-Table@{Hash\-Table}}
+\index{Hash\-Table@{Hash\-Table}!HashTable@{Hash\-Table}}
+\subsubsection[{Hash\-Table}]{\setlength{\rightskip}{0pt plus 5cm}Hash\-Table\-::\-Hash\-Table (
+\begin{DoxyParamCaption}
+\item[{int}]{sz}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_ad34603ecbe631c2609cf8bf6eb0e4234}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Initialize Hash Table.
+
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
 \hypertarget{classHashTable_a9ce5569bb945880cacb29aaba6f3e3f9}{\index{Hash\-Table@{Hash\-Table}!$\sim$\-Hash\-Table@{$\sim$\-Hash\-Table}}
 \index{$\sim$\-Hash\-Table@{$\sim$\-Hash\-Table}!HashTable@{Hash\-Table}}
 \subsubsection[{$\sim$\-Hash\-Table}]{\setlength{\rightskip}{0pt plus 5cm}Hash\-Table\-::$\sim$\-Hash\-Table (
@@ -65,6 +106,131 @@ Destructor for hashtable.
 none 
 \end{DoxyReturn}
 
+
+\subsection{Member Function Documentation}
+\hypertarget{classHashTable_aa434d220762650368342c0b359537c13}{\index{Hash\-Table@{Hash\-Table}!Add\-String@{Add\-String}}
+\index{Add\-String@{Add\-String}!HashTable@{Hash\-Table}}
+\subsubsection[{Add\-String}]{\setlength{\rightskip}{0pt plus 5cm}bool Hash\-Table\-::\-Add\-String (
+\begin{DoxyParamCaption}
+\item[{std\-::string}]{str}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_aa434d220762650368342c0b359537c13}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Add a string to the hash table
+
+\begin{DoxyReturn}{Returns}
+true -\/ sucessfully inserted string 
+
+false -\/ string failed to be insterted in hash table 
+\end{DoxyReturn}
+Add the string to the hash table \hypertarget{classHashTable_aeac528624c0abb98d25195c931087653}{\index{Hash\-Table@{Hash\-Table}!Delete\-String@{Delete\-String}}
+\index{Delete\-String@{Delete\-String}!HashTable@{Hash\-Table}}
+\subsubsection[{Delete\-String}]{\setlength{\rightskip}{0pt plus 5cm}bool Hash\-Table\-::\-Delete\-String (
+\begin{DoxyParamCaption}
+\item[{std\-::string}]{str}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_aeac528624c0abb98d25195c931087653}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Remove a string in the hash table
+
+\begin{DoxyReturn}{Returns}
+true -\/ sucessfully removed string 
+
+false -\/ string failed to be removed in hash table 
+\end{DoxyReturn}
+free memory \hypertarget{classHashTable_a9c1d6c48eb05f677330cfba9cb8d30cf}{\index{Hash\-Table@{Hash\-Table}!Get\-Table\-Count@{Get\-Table\-Count}}
+\index{Get\-Table\-Count@{Get\-Table\-Count}!HashTable@{Hash\-Table}}
+\subsubsection[{Get\-Table\-Count}]{\setlength{\rightskip}{0pt plus 5cm}int Hash\-Table\-::\-Get\-Table\-Count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_a9c1d6c48eb05f677330cfba9cb8d30cf}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Get number of items in the hash table.
+
+\begin{DoxyReturn}{Returns}
+total \# of items in Hash table 
+
+-\/1 if hashtable doesn't exist 
+\end{DoxyReturn}
+Check if table exists
+
+Count existing values in the table \hypertarget{classHashTable_a685b9fc2d98808166718fd3f7cbd0f5e}{\index{Hash\-Table@{Hash\-Table}!Get\-Table\-Size@{Get\-Table\-Size}}
+\index{Get\-Table\-Size@{Get\-Table\-Size}!HashTable@{Hash\-Table}}
+\subsubsection[{Get\-Table\-Size}]{\setlength{\rightskip}{0pt plus 5cm}int Hash\-Table\-::\-Get\-Table\-Size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_a685b9fc2d98808166718fd3f7cbd0f5e}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Get Table Size
+
+\begin{DoxyReturn}{Returns}
+table size 
+\end{DoxyReturn}
+\hypertarget{classHashTable_af9de52d84a6f01768c1df4c228ae2b68}{\index{Hash\-Table@{Hash\-Table}!Hash@{Hash}}
+\index{Hash@{Hash}!HashTable@{Hash\-Table}}
+\subsubsection[{Hash}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int Hash\-Table\-::\-Hash (
+\begin{DoxyParamCaption}
+\item[{std\-::string}]{str}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_af9de52d84a6f01768c1df4c228ae2b68}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Hashing method.\-This is just a placeholder so if someone else has a better idea then definitely change this. I'm guessing this is where the parallelism stuff will be inserted.
+
+\begin{DoxyReturn}{Returns}
+hash table value \% table size so that it fits within table range 
+\end{DoxyReturn}
+initialize hash to 0
+
+Multiply old hash value by 31. hashval $<$$<$ 5 = multiplying by 2$^\wedge$5 (32) minus hashval = 31. Shifts are faster than multiplication while still doing what we want to do.
+
+mod the hash value by the table size so it fits in the range. \hypertarget{classHashTable_a74b073c516dc278f73d08a4ea96cca77}{\index{Hash\-Table@{Hash\-Table}!Lookup\-String@{Lookup\-String}}
+\index{Lookup\-String@{Lookup\-String}!HashTable@{Hash\-Table}}
+\subsubsection[{Lookup\-String}]{\setlength{\rightskip}{0pt plus 5cm}{\bf node} $\ast$ Hash\-Table\-::\-Lookup\-String (
+\begin{DoxyParamCaption}
+\item[{std\-::string}]{str}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_a74b073c516dc278f73d08a4ea96cca77}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Look up a string in the table.
+
+\begin{DoxyReturn}{Returns}
+pointer to the string in the table. 
+
+N\-U\-L\-L if string isn't in the list 
+\end{DoxyReturn}
+Look for the item in the table 
 
 The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
 \item 

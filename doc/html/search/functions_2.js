@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_7ehashtable',['~HashTable',['../classHashTable.html#a9ce5569bb945880cacb29aaba6f3e3f9',1,'HashTable']]]
+  ['gettablecount',['GetTableCount',['../classHashTable.html#a9c1d6c48eb05f677330cfba9cb8d30cf',1,'HashTable']]],
+  ['gettablesize',['GetTableSize',['../classHashTable.html#a685b9fc2d98808166718fd3f7cbd0f5e',1,'HashTable']]]
 ];
