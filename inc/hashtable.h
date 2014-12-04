@@ -39,7 +39,8 @@ class HashTable
 protected:
   int size;
   hash_t *hash_ptr;
-  
+  omp_lock_t write_lock;
+
 public:
 
 public:

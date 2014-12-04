@@ -53,6 +53,7 @@
 
 #include "../inc/main.h"
 #include "../inc/hashtable.h"
+#include <iostream>
 
 /******************************************************************************
  *
@@ -95,10 +96,15 @@ int main(int argc, char ** argv)
   node *ptr1, *ptr2, *ptr3, *ptr4;
   int  c1,c2,c3,c4;
   
+  string temp;
+
   //default is 10, but can input table size 
   HashTable * ht1 = new HashTable();
-  HashTable * ht2 = new HashTable(20);
+  HashTable * ht2 = new HashTable(1500);
   
+
+  ifstream fin;
+
 
   ht1->AddString("hello");
   
@@ -106,7 +112,19 @@ int main(int argc, char ** argv)
   ptr2 = ht1->LookupString("hi");
   ptr3 = ht2->LookupString("hi");
 
-  
+#pragma omp parallel for num_threads(10) \
+  private(fin)
+  for(int i = 0; i < 10; i++)
+  {
+    fin.open(i + ".in");
+    //ht2->AddString("Added number " + i);
+    while(fin >> temp)
+    {
+        ht2->AddString(temp);
+    }
+  }
+
+
   c1 = ht1->GetTableCount();
   
   ht1->AddString("goodbye");

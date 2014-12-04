@@ -4,7 +4,7 @@ LINK = g++
 # COMPILER OPTIONS:
 
 CFLAGS = -c  -g -O0
-CXXFLAGS = $(CFLAGS) -std=c++11 -Wall
+CXXFLAGS = $(CFLAGS) -std=c++11 -Wall $(LIBS)
 
 # OpenGL/Mesa libraries for Linux:
 LIBS = -fopenmp -lm
@@ -20,7 +20,7 @@ EXECS = hash
 all: hash
 
 hash: ${OBJS}
-	$(LINK) -o $@ $^ $(GL_LIBS)
+	$(LINK) -o $@ $^ $(LIBS)
 clean:
 	rm -f *.o hash *~ src/*.o inc/*~ src/*~ $(EXECS) *~
 edit:

@@ -14,6 +14,7 @@
  ******************************************************************************/
 
 #include "../inc/hashtable.h"
+#include <omp.h>
 
 /******************************************************************************
  *
@@ -35,9 +36,6 @@ using namespace std;
  *****************************************************************************/
 HashTable::HashTable() : HashTable(10)
 {
-	omp_lock_t write_lock;
-
-	omp_init_lock(&write_lock);
 }
 
 /**************************************************************************//**
@@ -53,6 +51,7 @@ HashTable::HashTable() : HashTable(10)
 HashTable::HashTable(int sz) : size(sz), hash_ptr( CreateHashTable() )
 {
   //cout << "HashTable Created with size of " << GetTableSize() << endl;
+	omp_init_lock(&write_lock);
 }
 
 /**************************************************************************//**
@@ -226,16 +225,25 @@ bool HashTable::AddString(std::string str)
   
   if (( new_node = new node[ sizeof( node ) ] ) == NULL )
     return false;
-  
+ 
   curr_node = LookupString(str);
   
+  omp_set_lock(&write_lock);
   if (curr_node != NULL)
-    return false;
-  
+  {
+    curr_node = LookupString(str);
+    if(curr_node != NULL)
+    {
+        omp_unset_lock(&write_lock);
+        return false;
+    }
+  }
+
   new_node->item = str;
   new_node->next = hash_ptr->table[hashval];
   hash_ptr->table[hashval] = new_node;
-  
+
+  omp_unset_lock(&write_lock);
 
   return true;
 }
