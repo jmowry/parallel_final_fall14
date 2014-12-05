@@ -93,6 +93,8 @@ string getPtr(node *ptr);
 int main(int argc, char ** argv)
 {
   int rank, comm;
+  int num_workers;
+  int hashval;
 
   string temp, filename;
   char temp_array[50];
@@ -102,11 +104,15 @@ int main(int argc, char ** argv)
   MPI_Comm_size(MPI_COMM_WORLD, &comm);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+  num_workers = comm - 1;
+
+  //cout << num_workers << endl;
+
   if(rank == 0)
   {
     ifstream fin;
   
-    filename = "../1.in";
+    filename = "../big.big";
 
 
     fin.open(filename);
@@ -115,15 +121,24 @@ int main(int argc, char ** argv)
 
     while(fin >> temp_array)
     {
-        cout << temp_array << endl;
+        //cout << temp_array << endl;
 
-        MPI_Send(temp_array, 30, MPI_CHAR, 1, 0, MPI_COMM_WORLD );
+        hashval = 0;
+        char* t = temp_array;
+        for(; *t != '\0'; t++)
+            hashval = *t + (hashval << 5) - hashval;
+
+        hashval = hashval % num_workers;
+        hashval = abs(hashval);
+
+        //cout << hashval << endl;
+        MPI_Send(temp_array, 30, MPI_CHAR,1 + hashval, 0, MPI_COMM_WORLD );
     }
   }
 
   else
   {
-    HashTable * table = new HashTable(100);
+    HashTable * table = new HashTable(1000000);
 
     double start;
     MPI_Request request;
@@ -150,8 +165,11 @@ int main(int argc, char ** argv)
 
         recvflag = 0;
         cout << temp_array << " recieved" << endl;
-
+        
+        table->AddString( string(temp_array));
     }
+
+    cout <<"Process " << rank << " inserted this many " << table->GetTableCount() << endl;
 
     delete table;
   }
