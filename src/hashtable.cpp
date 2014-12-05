@@ -51,7 +51,7 @@ HashTable::HashTable() : HashTable(10)
 HashTable::HashTable(int sz) : size(sz), hash_ptr( CreateHashTable() )
 {
   //cout << "HashTable Created with size of " << GetTableSize() << endl;
-	omp_init_lock(&write_lock);
+  omp_init_lock(&write_lock);
 }
 
 /**************************************************************************//**
@@ -137,8 +137,8 @@ void HashTable::FreeTable()
           hash = hash->next;
 
           ///Program won't let me do this, might be causing mem leaks idk man
-          ///delete temp_hash;
-          temp_hash = NULL;
+          //delete temp_hash;
+          //temp_hash = NULL;
       }
   }
 
@@ -195,7 +195,7 @@ node *HashTable::LookupString(std::string str)
   unsigned int hashval = Hash(str);
 
   ///Look for the item in the table
-  for(node = hash_ptr->table[hashval]; node != NULL; node = node->next) \
+  for(node = hash_ptr->table[hashval]; node != NULL; node = node->next)
   {
       if ( str.compare(node->item) == 0) 
         return node;
@@ -219,7 +219,7 @@ bool HashTable::AddString(std::string str)
 {
   node *new_node;
   node *curr_node;
-  
+  omp_set_lock(&write_lock);
   ///Add the string to the hash table
   unsigned int hashval = Hash(str);
   
@@ -228,7 +228,7 @@ bool HashTable::AddString(std::string str)
  
   curr_node = LookupString(str);
   
-  omp_set_lock(&write_lock);
+
   if (curr_node != NULL)
   {
     curr_node = LookupString(str);

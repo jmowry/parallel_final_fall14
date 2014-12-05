@@ -54,7 +54,7 @@
 #include "../inc/main.h"
 #include "../inc/hashtable.h"
 #include <iostream>
-
+#include <sstream>
 /******************************************************************************
  *
  * NAMESPACES
@@ -78,6 +78,8 @@ using namespace std;
  ******************************************************************************/
 
 string getPtr(node *ptr);
+string RandomString(int len);
+int rng(int min, int max);
 
 /**************************************************************************//**
  * @author Julian Brackins
@@ -93,6 +95,8 @@ string getPtr(node *ptr);
  *****************************************************************************/
 int main(int argc, char ** argv)
 {
+  srand(time(NULL));
+  double start, finish, static_t, dynamic_t;  //Timing variables
   node *ptr1, *ptr2, *ptr3, *ptr4;
   int  c1,c2,c3,c4;
   
@@ -100,54 +104,51 @@ int main(int argc, char ** argv)
 
   //default is 10, but can input table size 
   HashTable * ht1 = new HashTable();
-  HashTable * ht2 = new HashTable(1500);
+  HashTable * ht2 = new HashTable(10000000);
   
 
-  ifstream fin;
-
-
-  ht1->AddString("hello");
+    ifstream fin;
+  start = omp_get_wtime( );
   
-  ptr1 = ht1->LookupString("hello");
-  ptr2 = ht1->LookupString("hi");
-  ptr3 = ht2->LookupString("hi");
-
-#pragma omp parallel for num_threads(10) \
-  private(fin)
-  for(int i = 0; i < 10; i++)
+#pragma omp parallel for num_threads(14) \
+  shared(ht2)
+  for(int i = 0; i < 4; i++)
   {
-    fin.open(i + ".in");
-    //ht2->AddString("Added number " + i);
-    while(fin >> temp)
-    {
-        ht2->AddString(temp);
+    for(int j = 0; j < 10000000; j++)
+    {   
+        string t = RandomString( rng(1,15) );
+        //printf("%s\n", t.c_str());
+        //string t = s;
+        //cout << s;
+        if(!ht2->AddString(t))
+            printf("failed to add: %s\n", t.c_str());
+        else
+            printf("added: %s\n", t.c_str());
     }
+    fin.close();
   }
+  finish = omp_get_wtime( );
+  static_t = finish - start;
 
-
-  c1 = ht1->GetTableCount();
-  
-  ht1->AddString("goodbye");
-  
-  c2 = ht1->GetTableCount();
   c3 = ht2->GetTableCount();
  
-  ht1->DeleteString("hello");
-  ptr4 = ht1->LookupString("hello");
-
-  c4 = ht1->GetTableCount();
   
-  //c1 = 1, c2 = 2, c3 = 0, c4 = 1  
-  cout << "counted " << c1 << " item(s) in this table" << endl;
-  cout << "counted " << c2 << " item(s) in this table" << endl;
+
   cout << "counted " << c3 << " item(s) in this table" << endl;
-  cout << "counted " << c4 << " item(s) in this table" << endl;
+  //cout << "counted " << c4 << " item(s) in this table" << endl;
   
   ///ptr1 should succeed, ptr2 & ptr3 fail.
-  cout << "found " << getPtr(ptr1) << endl;
-  cout << "found " << getPtr(ptr2) << endl;
-  cout << "found " << getPtr(ptr3) << endl;
-  cout << "found " << getPtr(ptr4) << endl;
+  //cout << "found " << getPtr(ptr1) << endl;
+  //cout << "found " << getPtr(ptr2) << endl;
+    fin.open("reg.out");
+
+    while(fin >> temp)
+    {  
+        ptr4 = ht2->LookupString(temp);
+        if(getPtr(ptr4)!=("NULL"))
+        cout << "found " << getPtr(ptr4) << endl;
+    }
+
   
   delete ht1;
   delete ht2; 
@@ -160,4 +161,35 @@ string getPtr(node *ptr)
     return ptr->item;
   else
     return "NULL";
+}
+
+
+string RandomString(int len)
+{
+   ///generate a random string here
+   string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+   int pos;
+   while(str.size() != len) 
+   {
+    pos = ((rand() % (str.size() - 1)));
+    str.erase (pos, 1);
+   }
+   return str;
+}
+
+/*************************************************************************//**
+ * @author Julian Brackins
+ *
+ * @par Description:
+ * Random number generator between two values
+ *
+ * @param[in] min - minimum value
+ * @param[in] max - maximum value
+ *
+ * @returns random number between min and max
+ *
+ *****************************************************************************/
+int rng(int min, int max)
+{
+  return rand() % (max-min) +min;
 }
