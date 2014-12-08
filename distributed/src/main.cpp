@@ -95,9 +95,21 @@ int main(int argc, char ** argv)
   int rank, comm;
   int num_workers;
   int hashval;
+  int input_size;
+  int table_size;
+  int insert_count;
+
+  double start, finish;
 
   string temp, filename;
   char temp_array[50];
+
+
+  if(argc < 3)
+  {
+    cout << "Usage: ./hash <input_file> <number_of_strings>\n";
+    return -1;
+  }
 
 
   MPI_Init(&argc, &argv);
@@ -110,15 +122,27 @@ int main(int argc, char ** argv)
 
   if(rank == 0)
   {
+    
+    
+
     ifstream fin;
   
-    filename = "../big.big";
-
+    filename = argv[1];
 
     fin.open(filename);
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    if(!fin)
+    {
+        cout << "bad shit\n";
+    }
 
+    input_size = atoi(argv[2]);
+
+    table_size = (input_size / (num_workers)) * 1.5;
+
+    MPI_Bcast(&table_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    
+    start = MPI_Wtime();
     while(fin >> temp_array)
     {
         //cout << temp_array << endl;
@@ -134,18 +158,25 @@ int main(int argc, char ** argv)
         //cout << hashval << endl;
         MPI_Send(temp_array, 30, MPI_CHAR,1 + hashval, 0, MPI_COMM_WORLD );
     }
+    finish = MPI_Wtime();
+
+    cout << finish - start << endl;
   }
 
-  else
-  {
-    HashTable * table = new HashTable(1000000);
 
-    double start;
+  if(rank != 0)
+  {
+
+    MPI_Bcast(&table_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+   
+    //cout << table_size << endl;
+
+    HashTable * table = new HashTable(table_size);
+
     MPI_Request request;
     int recvflag = 0;
     bool timedout = false;
 
-    MPI_Barrier(MPI_COMM_WORLD);
 
     while(!timedout)
     {
@@ -155,21 +186,25 @@ int main(int argc, char ** argv)
         while(recvflag == 0)
         {
             MPI_Test(&request, &recvflag, NULL);
-            if((MPI_Wtime() - start) > 4)
+            if((MPI_Wtime() - start) > 0.5)
             {
-                cout << "illuminarty" << endl;
+                //cout << "illuminarty" << endl;
                 timedout = true;
                 break;
             }
         }
 
         recvflag = 0;
-        cout << temp_array << " recieved" << endl;
+        //cout << temp_array << " recieved" << endl;
         
         table->AddString( string(temp_array));
     }
 
+
+    insert_count = table->GetTableCount();
     cout <<"Process " << rank << " inserted this many " << table->GetTableCount() << endl;
+
+    
 
     delete table;
   }
