@@ -50,7 +50,7 @@ HashTable::HashTable() : HashTable(10)
  *****************************************************************************/
 HashTable::HashTable(int sz) : size(sz), hash_ptr( CreateHashTable() )
 {
-  //cout << "HashTable Created with size of " << GetTableSize() << endl;
+  cout << "HashTable Created with size of " << GetTableSize() << endl;
   omp_init_lock(&write_lock);
 }
 
@@ -224,8 +224,10 @@ bool HashTable::AddString(std::string str)
   unsigned int hashval = Hash(str);
   
   if (( new_node = new node[ sizeof( node ) ] ) == NULL )
+  { 
+    printf("failed to add: %s\n", str.c_str()); 
     return false;
- 
+  }
   curr_node = LookupString(str);
   
 
@@ -235,6 +237,7 @@ bool HashTable::AddString(std::string str)
     if(curr_node != NULL)
     {
         omp_unset_lock(&write_lock);
+        printf("failed to add: %s\n", str.c_str());
         return false;
     }
   }
@@ -244,7 +247,8 @@ bool HashTable::AddString(std::string str)
   hash_ptr->table[hashval] = new_node;
 
   omp_unset_lock(&write_lock);
-
+  
+  printf("        added: %s\n", str.c_str());
   return true;
 }
   
@@ -252,7 +256,7 @@ bool HashTable::AddString(std::string str)
  * @author Julian Brackins
  *
  * @par Description:
- *
+ 
  * Remove a string in the hash table
  *
  * @returns true - sucessfully removed string

@@ -40,7 +40,10 @@
  Date              Modification
  ----------------  --------------------------------------------------------------
  November 20, 2014 Repo set up by Joe
- November 24, 2014  putting together main file / some class structure
+ November 24, 2014 putting together main file / some class structure
+ December  4, 2014 shared implementation started in this file, Ryan moved
+                   distributed method into new "branch"
+ December     
  @endverbatim
  *
  ******************************************************************************/
@@ -51,6 +54,7 @@
  *
  ******************************************************************************/
 
+#include <omp.h>
 #include "../inc/main.h"
 #include "../inc/hashtable.h"
 #include <iostream>
@@ -80,6 +84,8 @@ using namespace std;
 string getPtr(node *ptr);
 string RandomString(int len);
 int rng(int min, int max);
+double timeOMP(double start, double finish);
+void Usage(char* prog_name);
 
 /**************************************************************************//**
  * @author Julian Brackins
@@ -99,48 +105,77 @@ int main(int argc, char ** argv)
   double start, finish, static_t, dynamic_t;  //Timing variables
   node *ptr1, *ptr2, *ptr3, *ptr4;
   int  c1,c2,c3,c4;
-  
+
+  int thread_count;  
   string temp;
+
+  int chunk_size = 1;
+  
+  if ( argc < 2 ) 
+    Usage(argv[0]);
+  thread_count = strtoll(argv[1], NULL, 10);
+  if (thread_count < 1 ) 
+    Usage(argv[0]);
+  if ( argc > 2 )
+    chunk_size = strtoll(argv[2], NULL, 10);
 
   //default is 10, but can input table size 
   HashTable * ht1 = new HashTable();
-  HashTable * ht2 = new HashTable(10000000);
-  
+  //HashTable * ht2 = new HashTable(10000000);
+  HashTable * ht2 = new HashTable(2);
 
-    ifstream fin;
+
+  ifstream fin;
   start = omp_get_wtime( );
-  
-#pragma omp parallel for num_threads(14) \
+ht2->AddString("adsfskfjds");
+ht2->AddString("fdadasd");
+ht2->AddString("jhjkj");
+ht2->AddString("ansdf");
+ht2->AddString("aasn");
+ht2->AddString("fdaa");
+ht2->AddString("asdfaa");
+ht2->AddString("anddsaffdfdaa");
+ht2->AddString("jdfssfdaaaa");
+ht2->AddString("andafnaadggfdgaaaa");
+ht2->AddString("gfdsgfgfgaaaa");
+ht2->AddString("hfghfhfghaaaaaaaaaa");
+
+#pragma omp parallel for schedule(dynamic, chunk_size) num_threads(thread_count) \
   shared(ht2)
   for(int i = 0; i < 4; i++)
   {
-    for(int j = 0; j < 10000000; j++)
+    for(int j = 0; j < 1; j++)
     {   
-        string t = RandomString( rng(1,15) );
+        string t = "q";//RandomString( rng(1,50) );
         //printf("%s\n", t.c_str());
         //string t = s;
         //cout << s;
-        if(!ht2->AddString(t))
-            printf("failed to add: %s\n", t.c_str());
-        else
-            printf("added: %s\n", t.c_str());
+        ht2->AddString(t);
+        //    printf("failed to add: %s\n", t.c_str());
+        //else
+        //    printf("added: %s\n", t.c_str());
     }
     fin.close();
   }
   finish = omp_get_wtime( );
-  static_t = finish - start;
+  dynamic_t = finish - start;
 
   c3 = ht2->GetTableCount();
- 
+
   
 
   cout << "counted " << c3 << " item(s) in this table" << endl;
   //cout << "counted " << c4 << " item(s) in this table" << endl;
   
   ///ptr1 should succeed, ptr2 & ptr3 fail.
-  //cout << "found " << getPtr(ptr1) << endl;
+  cout << "found " << getPtr(ht2->LookupString("jhjkj")) << endl;
+  cout << "found " << getPtr(ht2->LookupString("andAgain")) << endl;
+  cout << "found " << getPtr(ht2->LookupString("aga")) << endl;
+  cout << "found " << getPtr(ht2->LookupString("q")) << endl;
   //cout << "found " << getPtr(ptr2) << endl;
-    fin.open("reg.out");
+  
+  
+  fin.open("reg.out");
 
     while(fin >> temp)
     {  
@@ -149,7 +184,7 @@ int main(int argc, char ** argv)
         cout << "found " << getPtr(ptr4) << endl;
     }
 
-  
+  printf("Elapsed Time: %f\n", dynamic_t);
   delete ht1;
   delete ht2; 
   return 0; 
@@ -167,7 +202,7 @@ string getPtr(node *ptr)
 string RandomString(int len)
 {
    ///generate a random string here
-   string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+   string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy";
    int pos;
    while(str.size() != len) 
    {
@@ -175,6 +210,20 @@ string RandomString(int len)
     str.erase (pos, 1);
    }
    return str;
+}
+
+/*************************************************************************//**
+ * @author Julian Brackins
+ *  *
+ *   * @par Description:
+ *    * Get the Clock value.
+ *     *
+ *      * @returns time.
+ *       *
+ *        *****************************************************************************/
+double timeOMP(double start, double finish)
+{
+    return finish - start;
 }
 
 /*************************************************************************//**
@@ -192,4 +241,26 @@ string RandomString(int len)
 int rng(int min, int max)
 {
   return rand() % (max-min) +min;
+}
+
+/*************************************************************************//**
+ * @author Christer Karlsson
+ *  *
+ *   * @par Description:
+ *    * Print a message explaining how to run the program.
+ *     *
+ *      * @param[in] arg - prog_name
+ *       *
+ *        * @returns none
+ *         *
+ *          *****************************************************************************/
+void Usage(char* prog_name)
+{
+  ///Print usage statement here.
+  fprintf(stderr, "usage: %s <n> <ch>\n", prog_name);
+  fprintf(stderr, "   n is the number of threads >= 1\n");
+  fprintf(stderr, "   ch is the chunk size for each thread.\n");
+  fprintf(stderr, "   param n is REQUIRED.\n");
+  fprintf(stderr, "   param ch defaults to 1 if not provided.\n");
+  exit(0);
 }
