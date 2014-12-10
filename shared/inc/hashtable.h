@@ -40,7 +40,7 @@ protected:
   int size;
   hash_t *hash_ptr;
   omp_lock_t write_lock;
-
+  int table_count;
 public:
 
 public:
@@ -63,6 +63,8 @@ public:
   
   int GetTableSize();
   int GetTableCount();
+  void IncTableCount();
+  void DecTableCount();
 };
 
 #endif

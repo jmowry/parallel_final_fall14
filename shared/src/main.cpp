@@ -32,7 +32,7 @@
  *
  * @par Usage:
  @verbatim
- ./hash
+ ./hash <num_threads> <chunk_size = 1>
  @endverbatim
  *
  * @par Modifications and Development Timeline:
@@ -43,7 +43,7 @@
  November 24, 2014 putting together main file / some class structure
  December  4, 2014 shared implementation started in this file, Ryan moved
                    distributed method into new "branch"
- December     
+ December  8, 2014 Shared Finished
  @endverbatim
  *
  ******************************************************************************/
@@ -59,6 +59,9 @@
 #include "../inc/hashtable.h"
 #include <iostream>
 #include <sstream>
+#include <algorithm>
+#include <list>
+
 /******************************************************************************
  *
  * NAMESPACES
@@ -73,7 +76,7 @@ using namespace std;
  *
  ******************************************************************************/
 
-// global vars
+// None
 
 /******************************************************************************
  *
@@ -86,6 +89,8 @@ string RandomString(int len);
 int rng(int min, int max);
 double timeOMP(double start, double finish);
 void Usage(char* prog_name);
+double speedup(double t_ser, double t_par);
+double efficiency(double speedup, int thread_count);
 
 /**************************************************************************//**
  * @author Julian Brackins
@@ -101,16 +106,31 @@ void Usage(char* prog_name);
  *****************************************************************************/
 int main(int argc, char ** argv)
 {
-  srand(time(NULL));
-  double start, finish, static_t, dynamic_t;  //Timing variables
-  node *ptr1, *ptr2, *ptr3, *ptr4;
-  int  c1,c2,c3,c4;
-
+  ///We Don't Seed Rand so that the 
+  ///List of "Random" numbers is the 
+  ///Same for every run.
+  //srand(time(NULL));
+  ///Initialize Timing Variables
+  double start, finish, serial_t, static_t, dynamic_t;
+  ///Initialize Speedup and Efficiency Variables
+  double static_s, static_e, dynamic_s, dynamic_e; 
+  ///listSIZE variable dictates how large of a data set you'll work with
+  int listSIZE = 50000;
+  int i;
   int thread_count;  
   string temp;
-
+  string t;
   int chunk_size = 1;
-  
+
+
+  string strList[listSIZE]; 
+
+  ///Check number of arguments, 
+  ///If not enough then print Usage. 
+  ///If only 2 arguments (prog + thread_count), 
+  ///Then chunk_size is set to 1. If there 
+  ///Are 3 total arguments, the 3rd becomes 
+  ///chunk_size.
   if ( argc < 2 ) 
     Usage(argv[0]);
   thread_count = strtoll(argv[1], NULL, 10);
@@ -119,74 +139,76 @@ int main(int argc, char ** argv)
   if ( argc > 2 )
     chunk_size = strtoll(argv[2], NULL, 10);
 
-  //default is 10, but can input table size 
-  HashTable * ht1 = new HashTable();
-  //HashTable * ht2 = new HashTable(10000000);
-  HashTable * ht2 = new HashTable(2);
-
-
-  ifstream fin;
+  ///Set up the Hash Tables.
+  HashTable * ht1 = new HashTable(listSIZE);
+  HashTable * ht2 = new HashTable(listSIZE);
+  HashTable * ht3 = new HashTable(listSIZE);
+ 
+  ///Set up the random Strings in the array. 
+  ///We're gonna "cheat" a little in the random 
+  ///String gen and append the number of the string 
+  ///To the end of the string to ensure that each 
+  ///one is completely random and different from 
+  ///the other. This hash map uses its string as the 
+  ///hash "key" so each one needs to be unique.
+# pragma omp parallel for schedule(static, chunk_size) num_threads(thread_count)
+  for(i = 0; i < listSIZE; i++)
+    strList[i] = RandomString( rng(1, 10 ) ) + to_string(i);
+ 
+  ///Run and time the Serial solution
   start = omp_get_wtime( );
-ht2->AddString("adsfskfjds");
-ht2->AddString("fdadasd");
-ht2->AddString("jhjkj");
-ht2->AddString("ansdf");
-ht2->AddString("aasn");
-ht2->AddString("fdaa");
-ht2->AddString("asdfaa");
-ht2->AddString("anddsaffdfdaa");
-ht2->AddString("jdfssfdaaaa");
-ht2->AddString("andafnaadggfdgaaaa");
-ht2->AddString("gfdsgfgfgaaaa");
-ht2->AddString("hfghfhfghaaaaaaaaaa");
+# pragma omp parallel for schedule(dynamic, 1) num_threads(1)
+  for( i = 0; i < listSIZE; i++)
+    ht1->AddString(strList[i]);
+  finish = omp_get_wtime();
+  serial_t = finish-start;
+  
 
-#pragma omp parallel for schedule(dynamic, chunk_size) num_threads(thread_count) \
-  shared(ht2)
-  for(int i = 0; i < 4; i++)
-  {
-    for(int j = 0; j < 1; j++)
-    {   
-        string t = "q";//RandomString( rng(1,50) );
-        //printf("%s\n", t.c_str());
-        //string t = s;
-        //cout << s;
-        ht2->AddString(t);
-        //    printf("failed to add: %s\n", t.c_str());
-        //else
-        //    printf("added: %s\n", t.c_str());
-    }
-    fin.close();
-  }
+  ///Run and time the Parallel (Static) solution
+  start = omp_get_wtime();
+# pragma omp parallel for schedule(static, chunk_size) num_threads(thread_count)
+  for( i = 0; i < listSIZE; i++)
+    ht2->AddString(strList[i]);
+  finish = omp_get_wtime();
+  static_t = finish - start;
+
+  ///Run and time the Parallel (Dynamic) solution
+  start = omp_get_wtime( );
+# pragma omp parallel for schedule(dynamic, chunk_size) num_threads(thread_count) 
+  for( i = 0; i < listSIZE; i++)
+    ht3->AddString(strList[i]);
   finish = omp_get_wtime( );
   dynamic_t = finish - start;
 
-  c3 = ht2->GetTableCount();
+  ///Calculate Speedup and Efficiency
+  static_s = speedup(serial_t, static_t);
+  static_e = efficiency(static_s, thread_count);
+  dynamic_s = speedup(serial_t, dynamic_t);
+  dynamic_e = efficiency(dynamic_s, thread_count);
 
-  
+  ///Print Thread Count, Chunk Size
+  printf("Thread Count: %d | Chunk Size: %d\n", thread_count, chunk_size);
+  ///Count the values in each table.
+  printf("counted %d items in Serial  Table\n", ht1->GetTableCount());
+  printf("counted %d items in Static  Table\n", ht2->GetTableCount());
+  printf("counted %d items in Dynamic Table\n", ht3->GetTableCount());
 
-  cout << "counted " << c3 << " item(s) in this table" << endl;
-  //cout << "counted " << c4 << " item(s) in this table" << endl;
-  
-  ///ptr1 should succeed, ptr2 & ptr3 fail.
-  cout << "found " << getPtr(ht2->LookupString("jhjkj")) << endl;
-  cout << "found " << getPtr(ht2->LookupString("andAgain")) << endl;
-  cout << "found " << getPtr(ht2->LookupString("aga")) << endl;
-  cout << "found " << getPtr(ht2->LookupString("q")) << endl;
-  //cout << "found " << getPtr(ptr2) << endl;
-  
-  
-  fin.open("reg.out");
+  ///Print Timing Analysis
+  printf("Elapsed Serial  Time: %f\n",  serial_t);
+  printf("Elapsed Static  Time: %f\n",  static_t); 
+  printf("Elapsed Dynamic Time: %f\n\n", dynamic_t);
 
-    while(fin >> temp)
-    {  
-        ptr4 = ht2->LookupString(temp);
-        if(getPtr(ptr4)!=("NULL"))
-        cout << "found " << getPtr(ptr4) << endl;
-    }
+  printf("Static Statistics:\n");
+  printf(" Observed    Speedup: %f\n",  static_s);
+  printf(" Observed Efficiency: %f\n",  static_e); 
 
-  printf("Elapsed Time: %f\n", dynamic_t);
+  printf("Dynamic Statistics:\n");
+  printf(" Observed    Speedup: %f\n", dynamic_s);
+  printf(" Observed Efficiency: %f\n", dynamic_e);
+  ///delete tables
   delete ht1;
   delete ht2; 
+  delete ht3;
   return 0; 
 }
 
@@ -204,10 +226,10 @@ string RandomString(int len)
    ///generate a random string here
    string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy";
    int pos;
-   while(str.size() != len) 
+   while((int)str.size() != len) 
    {
-    pos = ((rand() % (str.size() - 1)));
-    str.erase (pos, 1);
+     pos = ((rand() % (str.size() - 1)));
+     str.erase (pos, 1);
    }
    return str;
 }
@@ -264,3 +286,41 @@ void Usage(char* prog_name)
   fprintf(stderr, "   param ch defaults to 1 if not provided.\n");
   exit(0);
 }
+
+
+/*************************************************************************//**
+* @author Julian Brackins
+* *
+* * @par Description:
+* * Calculation of the program's speedup by comparing the parallel solution
+* * to the serial solution.
+* *
+* * @param[in] t_ser - serial solution
+* * @param[in] t_par - parallel solution
+* *
+* * @return speedup of the program.
+* *****************************************************************************/
+double speedup(double t_ser, double t_par)
+{
+    return t_ser/t_par;
+}
+
+/*************************************************************************//**
+* @author Julian Brackins
+* *
+* * @par Description:
+* * Calculation of the program's efficiency by taking the speedup calculated
+* * with the speedup() function and dividing it by the number of threads the
+* * program was run on. This indicates whether or not adding more threads gives
+* * a reasonable speedup.
+* *
+* * @param[in] speedup - calculated speedup of the program
+* * @param[in] thread_count - number of threads program ran on.
+* *
+* * @return efficiency of the program.
+* *****************************************************************************/
+double efficiency(double speedup, int thread_count)
+{
+    return (speedup)/( (double)thread_count );
+}
+                                  
