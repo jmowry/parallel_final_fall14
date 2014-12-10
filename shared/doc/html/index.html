@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Parallel Hash Table: Program 4 - Parallel Hash Table</title>
+<title>Parallel Hash Table: Program 4 - Parallel Hash Table (Shared)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">Program 4 - Parallel Hash Table </div>  </div>
+<div class="title">Program 4 - Parallel Hash Table (Shared) </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="course_section"></a>
@@ -88,19 +88,23 @@ CSC 433</h1>
 Program Information</h1>
 <p>Hmmmm</p>
 <h1><a class="anchor" id="compile_section"></a>
-Compiling and Usage</h1>
+Compiling and printUsage</h1>
 <dl class="section user"><dt>Compiling Instructions:</dt><dd>(Linux) - make</dd></dl>
-<dl class="section user"><dt>Usage:</dt><dd><pre class="fragment">./hash
+<dl class="section user"><dt>printUsage:</dt><dd><pre class="fragment">./hash &lt;num_values_to_hash&gt; &lt;num_threads&gt; &lt;chunk_size = 1&gt;
 </pre></dd></dl>
 <dl class="section user"><dt>Modifications and Development Timeline:</dt><dd><pre class="fragment">Date              Modification
 ----------------  --------------------------------------------------------------
 November 20, 2014 Repo set up by Joe
-November 24, 2014  putting together main file / some class structure
+November 24, 2014 putting together main file / some class structure
+December  4, 2014 shared implementation started in this file, Ryan moved
+                  distributed method into new "branch"
+December  8, 2014 Working out kinks in Shared solution
+December  9, 2014 Shared Completed...
 </pre> </dd></dl>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 24 2014 18:38:14 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 9 2014 22:11:29 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

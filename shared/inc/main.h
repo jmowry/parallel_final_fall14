@@ -25,6 +25,7 @@
  *
  ******************************************************************************/
 
+#include <omp.h>
 #include <cmath>
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,6 +33,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 /******************************************************************************
  *

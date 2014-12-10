@@ -30,6 +30,10 @@ bool \hyperlink{classHashTable_aeac528624c0abb98d25195c931087653}{Delete\-String
 int \hyperlink{classHashTable_a685b9fc2d98808166718fd3f7cbd0f5e}{Get\-Table\-Size} ()
 \item 
 int \hyperlink{classHashTable_a9c1d6c48eb05f677330cfba9cb8d30cf}{Get\-Table\-Count} ()
+\item 
+void \hyperlink{classHashTable_a2e806d467ac21b1392e67a215d904d17}{Inc\-Table\-Count} ()
+\item 
+void \hyperlink{classHashTable_ad364771e1ce21e952749cfa1668bb648}{Dec\-Table\-Count} ()
 \end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
@@ -38,6 +42,12 @@ int \hyperlink{classHashTable_a9c1d6c48eb05f677330cfba9cb8d30cf}{Get\-Table\-Cou
 
 \item 
 \hypertarget{classHashTable_a3cac095e178b62dffa384f63e903918a}{\hyperlink{structhash__t}{hash\-\_\-t} $\ast$ {\bfseries hash\-\_\-ptr}}\label{classHashTable_a3cac095e178b62dffa384f63e903918a}
+
+\item 
+\hypertarget{classHashTable_a826e378dcfd792d8259a0bf68fb491c9}{omp\-\_\-lock\-\_\-t {\bfseries write\-\_\-lock}}\label{classHashTable_a826e378dcfd792d8259a0bf68fb491c9}
+
+\item 
+\hypertarget{classHashTable_abb8a38894b160aad9c4e74238b1cec72}{int {\bfseries table\-\_\-count}}\label{classHashTable_abb8a38894b160aad9c4e74238b1cec72}
 
 \end{DoxyCompactItemize}
 
@@ -128,7 +138,26 @@ true -\/ sucessfully inserted string
 
 false -\/ string failed to be insterted in hash table 
 \end{DoxyReturn}
-Add the string to the hash table \hypertarget{classHashTable_aeac528624c0abb98d25195c931087653}{\index{Hash\-Table@{Hash\-Table}!Delete\-String@{Delete\-String}}
+Add the string to the hash table Get Hash Key
+
+Print error if the value was not added...
+
+Add the string in the hash location.
+
+Increment the count. \hypertarget{classHashTable_ad364771e1ce21e952749cfa1668bb648}{\index{Hash\-Table@{Hash\-Table}!Dec\-Table\-Count@{Dec\-Table\-Count}}
+\index{Dec\-Table\-Count@{Dec\-Table\-Count}!HashTable@{Hash\-Table}}
+\subsubsection[{Dec\-Table\-Count}]{\setlength{\rightskip}{0pt plus 5cm}void Hash\-Table\-::\-Dec\-Table\-Count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_ad364771e1ce21e952749cfa1668bb648}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Update number of items in Hash Table with a pragma omp critical ensuring multiple threads do not access this value at the same time. (D\-E\-C\-R\-E\-M\-E\-N\-T) \hypertarget{classHashTable_aeac528624c0abb98d25195c931087653}{\index{Hash\-Table@{Hash\-Table}!Delete\-String@{Delete\-String}}
 \index{Delete\-String@{Delete\-String}!HashTable@{Hash\-Table}}
 \subsubsection[{Delete\-String}]{\setlength{\rightskip}{0pt plus 5cm}bool Hash\-Table\-::\-Delete\-String (
 \begin{DoxyParamCaption}
@@ -148,7 +177,15 @@ true -\/ sucessfully removed string
 
 false -\/ string failed to be removed in hash table 
 \end{DoxyReturn}
-free memory \hypertarget{classHashTable_a9c1d6c48eb05f677330cfba9cb8d30cf}{\index{Hash\-Table@{Hash\-Table}!Get\-Table\-Count@{Get\-Table\-Count}}
+Get Hash key for string to find where it's at.
+
+Traverse through to the hash location
+
+Don't do anything if it isn't in the table..
+
+Remove value from table
+
+Decrement total count in table \hypertarget{classHashTable_a9c1d6c48eb05f677330cfba9cb8d30cf}{\index{Hash\-Table@{Hash\-Table}!Get\-Table\-Count@{Get\-Table\-Count}}
 \index{Get\-Table\-Count@{Get\-Table\-Count}!HashTable@{Hash\-Table}}
 \subsubsection[{Get\-Table\-Count}]{\setlength{\rightskip}{0pt plus 5cm}int Hash\-Table\-::\-Get\-Table\-Count (
 \begin{DoxyParamCaption}
@@ -168,9 +205,7 @@ total \# of items in Hash table
 
 -\/1 if hashtable doesn't exist 
 \end{DoxyReturn}
-Check if table exists
-
-Count existing values in the table \hypertarget{classHashTable_a685b9fc2d98808166718fd3f7cbd0f5e}{\index{Hash\-Table@{Hash\-Table}!Get\-Table\-Size@{Get\-Table\-Size}}
+\hypertarget{classHashTable_a685b9fc2d98808166718fd3f7cbd0f5e}{\index{Hash\-Table@{Hash\-Table}!Get\-Table\-Size@{Get\-Table\-Size}}
 \index{Get\-Table\-Size@{Get\-Table\-Size}!HashTable@{Hash\-Table}}
 \subsubsection[{Get\-Table\-Size}]{\setlength{\rightskip}{0pt plus 5cm}int Hash\-Table\-::\-Get\-Table\-Size (
 \begin{DoxyParamCaption}
@@ -210,7 +245,20 @@ initialize hash to 0
 
 Multiply old hash value by 31. hashval $<$$<$ 5 = multiplying by 2$^\wedge$5 (32) minus hashval = 31. Shifts are faster than multiplication while still doing what we want to do.
 
-mod the hash value by the table size so it fits in the range. \hypertarget{classHashTable_a74b073c516dc278f73d08a4ea96cca77}{\index{Hash\-Table@{Hash\-Table}!Lookup\-String@{Lookup\-String}}
+mod the hash value by the table size so it fits in the range. \hypertarget{classHashTable_a2e806d467ac21b1392e67a215d904d17}{\index{Hash\-Table@{Hash\-Table}!Inc\-Table\-Count@{Inc\-Table\-Count}}
+\index{Inc\-Table\-Count@{Inc\-Table\-Count}!HashTable@{Hash\-Table}}
+\subsubsection[{Inc\-Table\-Count}]{\setlength{\rightskip}{0pt plus 5cm}void Hash\-Table\-::\-Inc\-Table\-Count (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classHashTable_a2e806d467ac21b1392e67a215d904d17}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+
+\end{DoxyParagraph}
+Update number of items in Hash Table with a pragma omp critical ensuring multiple threads do not access this value at the same time. (I\-N\-C\-R\-E\-M\-E\-N\-T) \hypertarget{classHashTable_a74b073c516dc278f73d08a4ea96cca77}{\index{Hash\-Table@{Hash\-Table}!Lookup\-String@{Lookup\-String}}
 \index{Lookup\-String@{Lookup\-String}!HashTable@{Hash\-Table}}
 \subsubsection[{Lookup\-String}]{\setlength{\rightskip}{0pt plus 5cm}{\bf node} $\ast$ Hash\-Table\-::\-Lookup\-String (
 \begin{DoxyParamCaption}
