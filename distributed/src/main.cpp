@@ -325,7 +325,6 @@ int testTable(HashTable* table, string filename, int rank, int num_workers)
 
     if(fin)
     {
-        return -1;
     
 
         start = MPI_Wtime();
