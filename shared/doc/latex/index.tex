@@ -3,7 +3,7 @@
 Charles Bonn, Julian Brackins, Ryan Feather, \& Joe Mowry
 \end{DoxyAuthor}
 \begin{DoxyDate}{Date}
-Something S\-Omething Something
+Something December 10, 2014
 \end{DoxyDate}
 \begin{DoxyParagraph}{Professor\-:}
 Dr. Karlsson
@@ -15,12 +15,13 @@ C\-S\-C 433 -\/ M001 -\/ 3\-:00pm
 Mc\-Laury -\/ 313
 \end{DoxyParagraph}
 \hypertarget{index_program_section}{}\section{Program Information}\label{index_program_section}
-Hmmmm\hypertarget{index_compile_section}{}\section{Compiling and print\-Usage}\label{index_compile_section}
+This file is for running the shared memory solution for our parallelized Hash Table. Three Hash Tables are created to simulate the act of inserting values into our hash table. The first method is performed in serial, to create a benchmark speed for our timings. The next run uses Static scheduling and the third run uses Dynamic scheduling. Each run is timed to evaluate the speedup and efficiency of the two parallel solutions observed in this program. The program also verifies the amount of entries in each Hash Table. They should all be the same, the only way they wouldn't be is if one of the Hash Tables failed to add a certain value (which would happen if the value already exists in the hash table). This is due to the fact that our hash keys are based off of the value being read in to the table itself.\hypertarget{index_compile_section}{}\section{Compiling and print\-Usage}\label{index_compile_section}
 \begin{DoxyParagraph}{Compiling Instructions\-:}
 (Linux) -\/ make
 \end{DoxyParagraph}
-\begin{DoxyParagraph}{print\-Usage\-:}
+\begin{DoxyParagraph}{Usage\-:}
 \begin{DoxyVerb}./hash <num_values_to_hash> <num_threads> <chunk_size = 1>
+Please see printUsage() for specifics relating to runing the program
 \end{DoxyVerb}
 
 \end{DoxyParagraph}

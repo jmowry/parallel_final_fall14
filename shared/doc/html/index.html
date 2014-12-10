@@ -80,17 +80,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><h1><a class="anchor" id="course_section"></a>
 CSC 433</h1>
 <dl class="section author"><dt>Author</dt><dd>Charles Bonn, Julian Brackins, Ryan Feather, &amp; Joe Mowry</dd></dl>
-<dl class="section date"><dt>Date</dt><dd>Something SOmething Something</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>Something December 10, 2014</dd></dl>
 <dl class="section user"><dt>Professor:</dt><dd>Dr. Karlsson</dd></dl>
 <dl class="section user"><dt>Course:</dt><dd>CSC 433 - M001 - 3:00pm</dd></dl>
 <dl class="section user"><dt>Location:</dt><dd>McLaury - 313</dd></dl>
 <h1><a class="anchor" id="program_section"></a>
 Program Information</h1>
-<p>Hmmmm</p>
+<p>This file is for running the shared memory solution for our parallelized Hash Table. Three Hash Tables are created to simulate the act of inserting values into our hash table. The first method is performed in serial, to create a benchmark speed for our timings. The next run uses Static scheduling and the third run uses Dynamic scheduling. Each run is timed to evaluate the speedup and efficiency of the two parallel solutions observed in this program. The program also verifies the amount of entries in each Hash Table. They should all be the same, the only way they wouldn't be is if one of the Hash Tables failed to add a certain value (which would happen if the value already exists in the hash table). This is due to the fact that our hash keys are based off of the value being read in to the table itself.</p>
 <h1><a class="anchor" id="compile_section"></a>
 Compiling and printUsage</h1>
 <dl class="section user"><dt>Compiling Instructions:</dt><dd>(Linux) - make</dd></dl>
-<dl class="section user"><dt>printUsage:</dt><dd><pre class="fragment">./hash &lt;num_values_to_hash&gt; &lt;num_threads&gt; &lt;chunk_size = 1&gt;
+<dl class="section user"><dt>Usage:</dt><dd><pre class="fragment">./hash &lt;num_values_to_hash&gt; &lt;num_threads&gt; &lt;chunk_size = 1&gt;
+Please see printUsage() for specifics relating to runing the program
 </pre></dd></dl>
 <dl class="section user"><dt>Modifications and Development Timeline:</dt><dd><pre class="fragment">Date              Modification
 ----------------  --------------------------------------------------------------
@@ -104,7 +105,7 @@ December  9, 2014 Shared Completed...
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 9 2014 22:11:29 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Dec 10 2014 00:15:03 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

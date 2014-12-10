@@ -1,7 +1,10 @@
 \documentclass{article}
 
 \usepackage{graphicx}
+\usepackage{fullpage}
 
+
+\graphicspath{ {img/} }
 \begin{document}
 
 \title{Program 4 Design and Analysis}
@@ -40,6 +43,41 @@ Following Foster's design methodology, we have a brief overview:
 
 
 \subsection{Performance Testing}
+\begin{figure}
+  \caption{Timing Evaluation of increasing problem size}
+  \centering
+  \includegraphics[width=\textwidth]{chart1a}
+\end{figure}
+
+\begin{figure}
+  \caption{Speedup / Efficiency Evaluation of increasing problem size}
+  \centering
+  \includegraphics[width=\textwidth]{chart1b}
+\end{figure}
+
+\begin{figure}
+  \caption{Timing Evaluation of increasing thread count}
+  \centering
+  \includegraphics[width=\textwidth]{chart2a}
+\end{figure}
+
+\begin{figure}
+  \caption{Speedup / Efficiency Evaluation of increasing thread count}
+  \centering
+  \includegraphics[width=\textwidth]{chart2b}
+\end{figure}
+
+\begin{figure}
+  \caption{Timing Evaluation of increasing chunk size}
+  \centering
+  \includegraphics[width=\textwidth]{chart3a}
+\end{figure}
+
+\begin{figure}
+  \caption{Speedup / Efficiency Evaluation of increasing chunk size}
+  \centering
+  \includegraphics[width=\textwidth]{chart3b}
+\end{figure}
 
 
 \section{Part 2 - Distributed memory}
