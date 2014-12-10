@@ -11,8 +11,19 @@ S\-O\-U\-R\-C\-E -\/ main file. Contains Table initialization and other stuff.
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{main_8cpp_a904e420860195d90335d3e6e69219c69}{string {\bfseries get\-Ptr} (\hyperlink{structnode}{node} $\ast$ptr)}\label{main_8cpp_a904e420860195d90335d3e6e69219c69}
-
+string \hyperlink{main_8cpp_a904e420860195d90335d3e6e69219c69}{get\-Ptr} (\hyperlink{structnode}{node} $\ast$ptr)
+\item 
+string \hyperlink{main_8cpp_af94941f5d228facabdf8fa316ab81eb8}{random\-String} (int len)
+\item 
+int \hyperlink{main_8cpp_a06f44a92af4b9d92e74be9889f5d7ab5}{rng} (int min, int max)
+\item 
+double \hyperlink{main_8cpp_a952f541f6cc7a2bf140ef9b0218c9d92}{time\-O\-M\-P} (double start, double finish)
+\item 
+void \hyperlink{main_8cpp_a9b61bcda53cc1e81dd44b0039059613d}{print\-Usage} (char $\ast$prog\-\_\-name)
+\item 
+double \hyperlink{main_8cpp_ad696d900b333d7fcfb162b78773a79d9}{speedup} (double t\-\_\-ser, double t\-\_\-par)
+\item 
+double \hyperlink{main_8cpp_a875901ebda7df57a213c5a65ec3594f1}{efficiency} (double \hyperlink{main_8cpp_ad696d900b333d7fcfb162b78773a79d9}{speedup}, int thread\-\_\-count)
 \item 
 int \hyperlink{main_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main} (int argc, char $\ast$$\ast$argv)
 \end{DoxyCompactItemize}
@@ -22,6 +33,51 @@ int \hyperlink{main_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main} (int argc, cha
 S\-O\-U\-R\-C\-E -\/ main file. Contains Table initialization and other stuff. 
 
 \subsection{Function Documentation}
+\hypertarget{main_8cpp_a875901ebda7df57a213c5a65ec3594f1}{\index{main.\-cpp@{main.\-cpp}!efficiency@{efficiency}}
+\index{efficiency@{efficiency}!main.cpp@{main.\-cpp}}
+\subsubsection[{efficiency}]{\setlength{\rightskip}{0pt plus 5cm}double efficiency (
+\begin{DoxyParamCaption}
+\item[{double}]{speedup, }
+\item[{int}]{thread\-\_\-count}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_a875901ebda7df57a213c5a65ec3594f1}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+Calculation of the program's efficiency by taking the speedup calculated with the \hyperlink{main_8cpp_ad696d900b333d7fcfb162b78773a79d9}{speedup()} function and dividing it by the number of threads the program was run on. This indicates whether or not adding more threads gives a reasonable speedup.
+\end{DoxyParagraph}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em speedup} & -\/ calculated speedup of the program \\
+\hline
+\mbox{\tt in}  & {\em thread\-\_\-count} & -\/ number of threads program ran on.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+efficiency of the program. 
+\end{DoxyReturn}
+\hypertarget{main_8cpp_a904e420860195d90335d3e6e69219c69}{\index{main.\-cpp@{main.\-cpp}!get\-Ptr@{get\-Ptr}}
+\index{get\-Ptr@{get\-Ptr}!main.cpp@{main.\-cpp}}
+\subsubsection[{get\-Ptr}]{\setlength{\rightskip}{0pt plus 5cm}string get\-Ptr (
+\begin{DoxyParamCaption}
+\item[{{\bf node} $\ast$}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_a904e420860195d90335d3e6e69219c69}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+Extract the string value a pointer is pointing at...
+\end{DoxyParagraph}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em ptr} & -\/ node pointer containing item.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of \char`\"{}item\char`\"{} the nodepointer is pointing at, or N\-U\-L\-L if nothing. 
+\end{DoxyReturn}
 \hypertarget{main_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{\index{main.\-cpp@{main.\-cpp}!main@{main}}
 \index{main@{main}!main.cpp@{main.\-cpp}}
 \subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
@@ -46,4 +102,140 @@ This is the starting point to the program.
 \begin{DoxyReturn}{Returns}
 0 -\/ Program ends 
 \end{DoxyReturn}
-ptr1 should succeed, ptr2 \& ptr3 fail. 
+We Don't Seed Rand so that the List of \char`\"{}\-Random\char`\"{} numbers is the Same for every run.
+
+Initialize Timing Variables
+
+Initialize Speedup and Efficiency Variables
+
+list\-\_\-size variable dictates how large of a data set you'll work with thread\-\_\-count is how many threads the program will spawn chunk\-\_\-size is how many tasks each thread will take on (default is 1)
+
+i = iterator
+
+Check number of arguments, If not enough then print print\-Usage. If only 3 arguments (prog + thread\-\_\-count + list\-\_\-size ), Then chunk\-\_\-size is set to 1. If there Are 4 total arguments, the 4th becomes chunk\-\_\-size.
+
+Set up the Hash Tables.
+
+Set up the random Strings in the array. We're gonna \char`\"{}cheat\char`\"{} a little in the random String gen and append the number of the string To the end of the string to ensure that each one is completely random and different from the other. This hash map uses its string as the hash \char`\"{}key\char`\"{} so each one needs to be unique.
+
+Run and time the Serial solution
+
+Run and time the Parallel (Static) solution
+
+Run and time the Parallel (Dynamic) solution
+
+Calculate Speedup and Efficiency
+
+Print Thread Count, Chunk Size
+
+Count the values in each table.
+
+Print Timing Analysis
+
+delete tables \hypertarget{main_8cpp_a9b61bcda53cc1e81dd44b0039059613d}{\index{main.\-cpp@{main.\-cpp}!print\-Usage@{print\-Usage}}
+\index{print\-Usage@{print\-Usage}!main.cpp@{main.\-cpp}}
+\subsubsection[{print\-Usage}]{\setlength{\rightskip}{0pt plus 5cm}void print\-Usage (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{prog\-\_\-name}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_a9b61bcda53cc1e81dd44b0039059613d}
+\begin{DoxyAuthor}{Author}
+Christer Karlsson, Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+Print a message explaining how to run the program.
+\end{DoxyParagraph}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em arg} & -\/ prog\-\_\-name\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+Print print\-Usage statement here. \hypertarget{main_8cpp_af94941f5d228facabdf8fa316ab81eb8}{\index{main.\-cpp@{main.\-cpp}!random\-String@{random\-String}}
+\index{random\-String@{random\-String}!main.cpp@{main.\-cpp}}
+\subsubsection[{random\-String}]{\setlength{\rightskip}{0pt plus 5cm}string random\-String (
+\begin{DoxyParamCaption}
+\item[{int}]{len}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_af94941f5d228facabdf8fa316ab81eb8}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+Generate a random string!
+\end{DoxyParagraph}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em len} & -\/ the length of the string being generated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+str -\/ a random string 
+\end{DoxyReturn}
+generate a random string here \hypertarget{main_8cpp_a06f44a92af4b9d92e74be9889f5d7ab5}{\index{main.\-cpp@{main.\-cpp}!rng@{rng}}
+\index{rng@{rng}!main.cpp@{main.\-cpp}}
+\subsubsection[{rng}]{\setlength{\rightskip}{0pt plus 5cm}int rng (
+\begin{DoxyParamCaption}
+\item[{int}]{min, }
+\item[{int}]{max}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_a06f44a92af4b9d92e74be9889f5d7ab5}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+Random number generator between two values
+\end{DoxyParagraph}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em min} & -\/ minimum value \\
+\hline
+\mbox{\tt in}  & {\em max} & -\/ maximum value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+random number between min and max 
+\end{DoxyReturn}
+\hypertarget{main_8cpp_ad696d900b333d7fcfb162b78773a79d9}{\index{main.\-cpp@{main.\-cpp}!speedup@{speedup}}
+\index{speedup@{speedup}!main.cpp@{main.\-cpp}}
+\subsubsection[{speedup}]{\setlength{\rightskip}{0pt plus 5cm}double speedup (
+\begin{DoxyParamCaption}
+\item[{double}]{t\-\_\-ser, }
+\item[{double}]{t\-\_\-par}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_ad696d900b333d7fcfb162b78773a79d9}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+Calculation of the program's speedup by comparing the parallel solution to the serial solution.
+\end{DoxyParagraph}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em t\-\_\-ser} & -\/ serial solution \\
+\hline
+\mbox{\tt in}  & {\em t\-\_\-par} & -\/ parallel solution\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+speedup of the program. 
+\end{DoxyReturn}
+\hypertarget{main_8cpp_a952f541f6cc7a2bf140ef9b0218c9d92}{\index{main.\-cpp@{main.\-cpp}!time\-O\-M\-P@{time\-O\-M\-P}}
+\index{time\-O\-M\-P@{time\-O\-M\-P}!main.cpp@{main.\-cpp}}
+\subsubsection[{time\-O\-M\-P}]{\setlength{\rightskip}{0pt plus 5cm}double time\-O\-M\-P (
+\begin{DoxyParamCaption}
+\item[{double}]{start, }
+\item[{double}]{finish}
+\end{DoxyParamCaption}
+)}}\label{main_8cpp_a952f541f6cc7a2bf140ef9b0218c9d92}
+\begin{DoxyAuthor}{Author}
+Julian Brackins
+\end{DoxyAuthor}
+\begin{DoxyParagraph}{Description\-:}
+Get the Clock value.
+\end{DoxyParagraph}
+\begin{DoxyReturn}{Returns}
+time. 
+\end{DoxyReturn}

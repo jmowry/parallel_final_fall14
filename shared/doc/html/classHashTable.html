@@ -114,6 +114,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a685b9fc2d98808166718fd3f7cbd0f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c1d6c48eb05f677330cfba9cb8d30cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashTable.html#a9c1d6c48eb05f677330cfba9cb8d30cf">GetTableCount</a> ()</td></tr>
 <tr class="separator:a9c1d6c48eb05f677330cfba9cb8d30cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e806d467ac21b1392e67a215d904d17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashTable.html#a2e806d467ac21b1392e67a215d904d17">IncTableCount</a> ()</td></tr>
+<tr class="separator:a2e806d467ac21b1392e67a215d904d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad364771e1ce21e952749cfa1668bb648"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHashTable.html#ad364771e1ce21e952749cfa1668bb648">DecTableCount</a> ()</td></tr>
+<tr class="separator:ad364771e1ce21e952749cfa1668bb648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -123,6 +127,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
 <tr class="memitem:a3cac095e178b62dffa384f63e903918a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3cac095e178b62dffa384f63e903918a"></a>
 <a class="el" href="structhash__t.html">hash_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>hash_ptr</b></td></tr>
 <tr class="separator:a3cac095e178b62dffa384f63e903918a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826e378dcfd792d8259a0bf68fb491c9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a826e378dcfd792d8259a0bf68fb491c9"></a>
+omp_lock_t&#160;</td><td class="memItemRight" valign="bottom"><b>write_lock</b></td></tr>
+<tr class="separator:a826e378dcfd792d8259a0bf68fb491c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb8a38894b160aad9c4e74238b1cec72"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb8a38894b160aad9c4e74238b1cec72"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>table_count</b></td></tr>
+<tr class="separator:abb8a38894b160aad9c4e74238b1cec72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Hash Table class. </p>
@@ -206,7 +216,28 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>true - sucessfully inserted string </dd>
 <dd>
 false - string failed to be insterted in hash table </dd></dl>
-<p>Add the string to the hash table </p>
+<p>Add the string to the hash table Get Hash Key</p>
+<p>Print error if the value was not added...</p>
+<p>Add the string in the hash location.</p>
+<p>Increment the count. </p>
+
+</div>
+</div>
+<a class="anchor" id="ad364771e1ce21e952749cfa1668bb648"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HashTable::DecTableCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd></dd></dl>
+<p>Update number of items in Hash Table with a pragma omp critical ensuring multiple threads do not access this value at the same time. (DECREMENT) </p>
 
 </div>
 </div>
@@ -229,7 +260,11 @@ false - string failed to be insterted in hash table </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>true - sucessfully removed string </dd>
 <dd>
 false - string failed to be removed in hash table </dd></dl>
-<p>free memory </p>
+<p>Get Hash key for string to find where it's at.</p>
+<p>Traverse through to the hash location</p>
+<p>Don't do anything if it isn't in the table..</p>
+<p>Remove value from table</p>
+<p>Decrement total count in table </p>
 
 </div>
 </div>
@@ -251,8 +286,6 @@ false - string failed to be removed in hash table </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>total # of items in Hash table </dd>
 <dd>
 -1 if hashtable doesn't exist </dd></dl>
-<p>Check if table exists</p>
-<p>Count existing values in the table </p>
 
 </div>
 </div>
@@ -298,6 +331,24 @@ false - string failed to be removed in hash table </dd></dl>
 
 </div>
 </div>
+<a class="anchor" id="a2e806d467ac21b1392e67a215d904d17"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HashTable::IncTableCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd></dd></dl>
+<p>Update number of items in Hash Table with a pragma omp critical ensuring multiple threads do not access this value at the same time. (INCREMENT) </p>
+
+</div>
+</div>
 <a class="anchor" id="a74b073c516dc278f73d08a4ea96cca77"></a>
 <div class="memitem">
 <div class="memproto">
@@ -328,7 +379,7 @@ NULL if string isn't in the list </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 24 2014 18:38:14 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 9 2014 22:11:29 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

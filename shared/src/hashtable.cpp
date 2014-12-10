@@ -220,8 +220,9 @@ bool HashTable::AddString(std::string str)
 {
   node *new_node;
   node *curr_node;
-  //omp_set_lock(&write_lock);
+
   ///Add the string to the hash table
+  ///Get Hash Key
   unsigned int hashval = Hash(str);
   
   if (( new_node = new node[ sizeof( node ) ] ) == NULL )
@@ -231,24 +232,23 @@ bool HashTable::AddString(std::string str)
   }
   curr_node = LookupString(str);
   
-
+  ///Print error if the value was not added...
   if (curr_node != NULL)
   {
     curr_node = LookupString(str);
     if(curr_node != NULL)
     {
-        //omp_unset_lock(&write_lock);
         printf("failed to add: %s\n", str.c_str());
         return false;
     }
   }
 
+  ///Add the string in the hash location.
   new_node->item = str;
   new_node->next = hash_ptr->table[hashval];
   hash_ptr->table[hashval] = new_node;
 
-  //omp_unset_lock(&write_lock);
-  //table_count++;
+  ///Increment the count.
   IncTableCount();
   //printf("        added: %s\n", str.c_str());
   return true;
@@ -270,23 +270,25 @@ bool HashTable::DeleteString(std::string str)
   node *prev_node;
   node *curr_node;
   
+  ///Get Hash key for string to find where it's at.
   unsigned int hashval = Hash(str);
   
+  ///Traverse through to the hash location
   for(prev_node = NULL, curr_node = hash_ptr->table[hashval]; 
       curr_node != NULL && str.compare(curr_node->item);
       prev_node = curr_node, curr_node = curr_node->next);  
       
+  ///Don't do anything if it isn't in the table..
   if(curr_node == NULL )
     return false;
     
+  ///Remove value from table
   if(prev_node == NULL)
     hash_ptr->table[hashval] = curr_node->next;
   else
     prev_node->next = curr_node->next;
   
-  ///free memory
-
-  //table_count--;
+  ///Decrement total count in table
   DecTableCount();
   return true;
 }
@@ -318,33 +320,32 @@ int HashTable::GetTableCount()
   return table_count; 
 }
 
+/**************************************************************************//**
+ * @author Julian Brackins
+ *
+ * @par Description:
+ *
+ * Update number of items in Hash Table with a pragma omp critical ensuring
+ * multiple threads do not access this value at the same time. (INCREMENT)
+ *
+ ******************************************************************************/  
 void HashTable::IncTableCount()
 {
 # pragma omp critical(dataupdate)
   table_count++;
 }
+
+/**************************************************************************//**
+ * @author Julian Brackins
+ *
+ * @par Description:
+ *
+ * Update number of items in Hash Table with a pragma omp critical ensuring
+ * multiple threads do not access this value at the same time. (DECREMENT)
+ *
+ ******************************************************************************/  
 void HashTable::DecTableCount()
 {
 # pragma omp critical(dataupdate)
   table_count--;
 }
-/*Depricated version of GetTableCount:
-
-
-  int count = 0;
-
-  node* ptr;
-
-  ///Check if table exists
-    if( hash_ptr == NULL)
-        return -1;
-  
-          ///Count existing values in the table  
-            for( int i = 0; i < GetTableSize(); i++)
-              {
-                  for( ptr = hash_ptr->table[i]; ptr != NULL; ptr = ptr->next)
-                        count++;
-                          }
-  
-                            return count;
-  */

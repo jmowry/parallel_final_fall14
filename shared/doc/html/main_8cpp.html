@@ -97,15 +97,87 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a904e420860195d90335d3e6e69219c69"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a904e420860195d90335d3e6e69219c69"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>getPtr</b> (<a class="el" href="structnode.html">node</a> *ptr)</td></tr>
+<tr class="memitem:a904e420860195d90335d3e6e69219c69"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a904e420860195d90335d3e6e69219c69">getPtr</a> (<a class="el" href="structnode.html">node</a> *ptr)</td></tr>
 <tr class="separator:a904e420860195d90335d3e6e69219c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94941f5d228facabdf8fa316ab81eb8"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#af94941f5d228facabdf8fa316ab81eb8">randomString</a> (int len)</td></tr>
+<tr class="separator:af94941f5d228facabdf8fa316ab81eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f44a92af4b9d92e74be9889f5d7ab5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a06f44a92af4b9d92e74be9889f5d7ab5">rng</a> (int min, int max)</td></tr>
+<tr class="separator:a06f44a92af4b9d92e74be9889f5d7ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a952f541f6cc7a2bf140ef9b0218c9d92"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a952f541f6cc7a2bf140ef9b0218c9d92">timeOMP</a> (double start, double finish)</td></tr>
+<tr class="separator:a952f541f6cc7a2bf140ef9b0218c9d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b61bcda53cc1e81dd44b0039059613d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a9b61bcda53cc1e81dd44b0039059613d">printUsage</a> (char *prog_name)</td></tr>
+<tr class="separator:a9b61bcda53cc1e81dd44b0039059613d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad696d900b333d7fcfb162b78773a79d9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ad696d900b333d7fcfb162b78773a79d9">speedup</a> (double t_ser, double t_par)</td></tr>
+<tr class="separator:ad696d900b333d7fcfb162b78773a79d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a875901ebda7df57a213c5a65ec3594f1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a875901ebda7df57a213c5a65ec3594f1">efficiency</a> (double <a class="el" href="main_8cpp.html#ad696d900b333d7fcfb162b78773a79d9">speedup</a>, int thread_count)</td></tr>
+<tr class="separator:a875901ebda7df57a213c5a65ec3594f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SOURCE - main file. Contains Table initialization and other stuff. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a875901ebda7df57a213c5a65ec3594f1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double efficiency </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>speedup</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>thread_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd>Calculation of the program's efficiency by taking the speedup calculated with the <a class="el" href="main_8cpp.html#ad696d900b333d7fcfb162b78773a79d9">speedup()</a> function and dividing it by the number of threads the program was run on. This indicates whether or not adding more threads gives a reasonable speedup.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">speedup</td><td>- calculated speedup of the program </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">thread_count</td><td>- number of threads program ran on.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>efficiency of the program. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a904e420860195d90335d3e6e69219c69"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string getPtr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structnode.html">node</a> *&#160;</td>
+          <td class="paramname"><em>ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd>Extract the string value a pointer is pointing at...</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ptr</td><td>- node pointer containing item.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>value of "item" the nodepointer is pointing at, or NULL if nothing. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a3c04138a5bfe5d72780bb7e82a18e627"></a>
 <div class="memitem">
 <div class="memproto">
@@ -139,14 +211,182 @@ string&#160;</td><td class="memItemRight" valign="bottom"><b>getPtr</b> (<a clas
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 - Program ends </dd></dl>
-<p>ptr1 should succeed, ptr2 &amp; ptr3 fail. </p>
+<p>We Don't Seed Rand so that the List of "Random" numbers is the Same for every run.</p>
+<p>Initialize Timing Variables</p>
+<p>Initialize Speedup and Efficiency Variables</p>
+<p>list_size variable dictates how large of a data set you'll work with thread_count is how many threads the program will spawn chunk_size is how many tasks each thread will take on (default is 1)</p>
+<p>i = iterator</p>
+<p>Check number of arguments, If not enough then print printUsage. If only 3 arguments (prog + thread_count + list_size ), Then chunk_size is set to 1. If there Are 4 total arguments, the 4th becomes chunk_size.</p>
+<p>Set up the Hash Tables.</p>
+<p>Set up the random Strings in the array. We're gonna "cheat" a little in the random String gen and append the number of the string To the end of the string to ensure that each one is completely random and different from the other. This hash map uses its string as the hash "key" so each one needs to be unique.</p>
+<p>Run and time the Serial solution</p>
+<p>Run and time the Parallel (Static) solution</p>
+<p>Run and time the Parallel (Dynamic) solution</p>
+<p>Calculate Speedup and Efficiency</p>
+<p>Print Thread Count, Chunk Size</p>
+<p>Count the values in each table.</p>
+<p>Print Timing Analysis</p>
+<p>delete tables </p>
+
+</div>
+</div>
+<a class="anchor" id="a9b61bcda53cc1e81dd44b0039059613d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printUsage </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>prog_name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Christer Karlsson, Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd>Print a message explaining how to run the program.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg</td><td>- prog_name</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>none </dd></dl>
+<p>Print printUsage statement here. </p>
+
+</div>
+</div>
+<a class="anchor" id="af94941f5d228facabdf8fa316ab81eb8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string randomString </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd>Generate a random string!</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>- the length of the string being generated.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>str - a random string </dd></dl>
+<p>generate a random string here </p>
+
+</div>
+</div>
+<a class="anchor" id="a06f44a92af4b9d92e74be9889f5d7ab5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int rng </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd>Random number generator between two values</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">min</td><td>- minimum value </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">max</td><td>- maximum value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>random number between min and max </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad696d900b333d7fcfb162b78773a79d9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double speedup </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>t_ser</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>t_par</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd>Calculation of the program's speedup by comparing the parallel solution to the serial solution.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">t_ser</td><td>- serial solution </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">t_par</td><td>- parallel solution</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>speedup of the program. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a952f541f6cc7a2bf140ef9b0218c9d92"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double timeOMP </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>finish</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section author"><dt>Author</dt><dd>Julian Brackins</dd></dl>
+<dl class="section user"><dt>Description:</dt><dd>Get the Clock value.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>time. </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 24 2014 18:38:14 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 9 2014 22:11:29 for Parallel Hash Table by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
