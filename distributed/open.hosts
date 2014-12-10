@@ -1,0 +1,24 @@
+#linux101 slots=1 max-slots=4
+#linux102 slots=1 max-slots=4
+#linux103 slots=1 max-slots=4
+#linux01  slots=4 max-slots=8
+linux02  slots=4 max-slots=8
+linux03  slots=4 max-slots=8
+linux04  slots=4 max-slots=8
+linux05  slots=4 max-slots=8
+linux06  slots=4 max-slots=8
+linux07  slots=4 max-slots=8
+linux08  slots=4 max-slots=8
+linux09  slots=4 max-slots=8
+linux10  slots=4 max-slots=8
+linux11  slots=4 max-slots=8
+linux12  slots=4 max-slots=8
+linux13  slots=4 max-slots=8
+#linux14  slots=1 max-slots=8
+linux15  slots=4 max-slots=8
+linux16  slots=4 max-slots=8
+linux17  slots=4 max-slots=8
+linux18  slots=4 max-slots=8
+#linux19  slots=1 max-slots=8
+#linux20  slots=1 max-slots=8
+
