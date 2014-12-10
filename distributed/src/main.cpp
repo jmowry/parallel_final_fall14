@@ -9,7 +9,7 @@
  *
  * @author Charles Bonn, Julian Brackins, Ryan Feather, & Joe Mowry
  *
- * @date Something SOmething Something
+ * @date 12/9/2014
  *
  * @par Professor:
  *         Dr. Karlsson
@@ -23,7 +23,8 @@
  * @section program_section Program Information
  *
  * @details
- * Hmmmm
+ * This is the distributed version of our parallel hash table.
+ * The parallelism is achieved through the use of MPI.
  *
  * @section compile_section Compiling and Usage
  *
@@ -32,7 +33,7 @@
  *
  * @par Usage:
  @verbatim
- ./hash
+ ./hash <input_file> <number_of_strings> <test_file>
  @endverbatim
  *
  * @par Modifications and Development Timeline:
@@ -41,6 +42,8 @@
  ----------------  --------------------------------------------------------------
  November 20, 2014 Repo set up by Joe
  November 24, 2014  putting together main file / some class structure
+ December 4, 2014 Main distributed code written
+ December 9, 2014 Added lookup testing and cleaned code
  @endverbatim
  *
  ******************************************************************************/
@@ -80,7 +83,7 @@ string getPtr(node *ptr);
 int testTable(HashTable * table, string filename, int rank, int num_workers);
 
 /**************************************************************************//**
- * @author Julian Brackins
+ * @author Ryan Feather
  *
  * @par Description:
  * This is the starting point to the program.  
@@ -101,15 +104,17 @@ int main(int argc, char ** argv)
   int insert_count;
   int i;
 
+  //start and finish times
   double start, finish;
 
   string temp, filename;
   char temp_array[50];
 
 
-  if(argc < 3)
+  //Ensure that we have the correct number of arguments 
+  if(argc < 4)
   {
-    cout << "Usage: ./hash <input_file> <number_of_strings>\n";
+    cout << "Usage: ./hash <input_file> <number_of_strings> <test_file>\n";
     return -1;
   }
 
@@ -118,10 +123,16 @@ int main(int argc, char ** argv)
   MPI_Comm_size(MPI_COMM_WORLD, &comm);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+  //Worker threads are any that are not rank 0
   num_workers = comm - 1;
 
-  //cout << num_workers << endl;
-
+  //If the root thread
+  //    open the input file
+  //    determine the table sizes
+  //    read in strings
+  //        hash it
+  //        determine which thread to give it to
+  //        send it
   if(rank == 0)
   {
     
@@ -168,16 +179,21 @@ int main(int argc, char ** argv)
     MPI_Barrier(MPI_COMM_WORLD);
     finish = MPI_Wtime();
 
-    cout <<"Table created in " << finish - start << " seconds\n";
    
+    cout <<"Table created in " << finish - start << " seconds\n";
 
 
+    //Call the function to lookup values in the table
     filename = argv[3];
 
     testTable(NULL, filename, rank, num_workers);
   }
 
 
+  //if a worker thread
+  //    create a table based on a given size
+  //    when given a string from the root thread
+  //        attempt to add it to the table
   if(rank != 0)
   {
 
@@ -192,6 +208,12 @@ int main(int argc, char ** argv)
     bool timedout = false;
 
 
+    //This loop creates a time-dependent, non-blocking recieve
+    //It does this by creating a spinning loop that stops after
+    //a certain timeout value
+    //
+    //We do this because no thread knows how many values it will
+    //be given
     while(!timedout)
     {
         start = MPI_Wtime();
@@ -210,6 +232,7 @@ int main(int argc, char ** argv)
         recvflag = 0;
         //cout << temp_array << " recieved" << endl;
         
+        //Add the value to the table
         table->AddString( string(temp_array));
     }
 
@@ -219,6 +242,8 @@ int main(int argc, char ** argv)
    
 
     MPI_Barrier(MPI_COMM_WORLD);
+
+    //Call the function to test value lookup
     testTable(table, "", rank, num_workers);
 
     delete table;
@@ -239,11 +264,26 @@ string getPtr(node *ptr)
     return "NULL";
 }
 
+/**************************************************************************//**
+ * @author Ryan Feather
+ *
+ * @par Description:
+ * Takes an existing set of parallel tables and tries to lookup
+ * a file full of strings.  
+ *
+ * @param[in] table - A hash table filled with values
+ * @param[in] filename - The file with test values
+ * @param[in] rank - The thread rank
+ * @param[in] num_workers - The number of worker threads
+ *
+ * @returns count
+ *
+ *****************************************************************************/
 int testTable(HashTable* table, string filename, int rank, int num_workers)
 {
   MPI_Request request;
   int recvflag = 0;
-  double start;
+  double start, finish;
   bool timedout = false;
   char temp_array[30];
   int count = 0;
@@ -259,7 +299,7 @@ int testTable(HashTable* table, string filename, int rank, int num_workers)
         while(recvflag == 0)
         {
             MPI_Test(&request, &recvflag, NULL);
-            if((MPI_Wtime() - start) > 1)
+            if((MPI_Wtime() - start) > 0.04)
             {
                 timedout = true;
                 break;
@@ -273,7 +313,8 @@ int testTable(HashTable* table, string filename, int rank, int num_workers)
         {
             count++;
         }
-      }  
+      } 
+    MPI_Barrier(MPI_COMM_WORLD);
     cout <<"Process " << rank << " found this many " << count << endl;
   }
   else
@@ -282,26 +323,38 @@ int testTable(HashTable* table, string filename, int rank, int num_workers)
 
     fin.open(filename);
 
-    if(!fin)
+    if(fin)
     {
         return -1;
-    }
+    
 
-    while(fin >> temp_array)
-    {
-        //cout << temp_array << endl;
+        start = MPI_Wtime();
+        while(fin >> temp_array)
+        {
+            //cout << temp_array << endl;
 
-        hashval = 0;
-        char* t = temp_array;
-        for(; *t != '\0'; t++)
-            hashval = *t + (hashval << 5) - hashval;
+            count++;
 
-        hashval = hashval % num_workers;
-        hashval = abs(hashval);
+            hashval = 0;
+            char* t = temp_array;
+            for(; *t != '\0'; t++)
+                hashval = *t + (hashval << 5) - hashval;
 
-        //cout << hashval << endl;
-        MPI_Send(temp_array, 30, MPI_CHAR,1 + hashval, 0, MPI_COMM_WORLD );
-    }
+            hashval = hashval % num_workers;
+            hashval = abs(hashval);
+
+            //cout << hashval << endl;
+            MPI_Send(temp_array, 30, MPI_CHAR,1 + hashval, 0, MPI_COMM_WORLD );
+        }
+    } 
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    
+    finish = MPI_Wtime();
+
+    cout << count << " entries looked up in " << finish - start << " seconds\n";
+
+   
 
   }
 
