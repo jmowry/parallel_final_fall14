@@ -50,7 +50,8 @@ HashTable::HashTable() : HashTable(10)
  *****************************************************************************/
 HashTable::HashTable(int sz) : size(sz), hash_ptr( CreateHashTable() )
 {
-  cout << "HashTable Created with size of " << GetTableSize() << endl;
+  table_count = 0;
+  //cout << "HashTable Created with size of " << GetTableSize() << endl;
   omp_init_lock(&write_lock);
 }
 
@@ -122,7 +123,7 @@ void HashTable::FreeTable()
   ///Free up the table. I think this is wrong because 
   ///my computer was dumping some gross seg faults earlier...
   int i;
-  node *hash, *temp_hash;
+  node *hash;//, *temp_hash;
 
   if (hash_ptr==NULL) 
     return;
@@ -133,7 +134,7 @@ void HashTable::FreeTable()
       hash = hash_ptr->table[i];
       while(hash!=NULL) 
       {
-          temp_hash = hash;
+          //temp_hash = hash;
           hash = hash->next;
 
           ///Program won't let me do this, might be causing mem leaks idk man
@@ -219,7 +220,7 @@ bool HashTable::AddString(std::string str)
 {
   node *new_node;
   node *curr_node;
-  omp_set_lock(&write_lock);
+  //omp_set_lock(&write_lock);
   ///Add the string to the hash table
   unsigned int hashval = Hash(str);
   
@@ -236,7 +237,7 @@ bool HashTable::AddString(std::string str)
     curr_node = LookupString(str);
     if(curr_node != NULL)
     {
-        omp_unset_lock(&write_lock);
+        //omp_unset_lock(&write_lock);
         printf("failed to add: %s\n", str.c_str());
         return false;
     }
@@ -246,9 +247,10 @@ bool HashTable::AddString(std::string str)
   new_node->next = hash_ptr->table[hashval];
   hash_ptr->table[hashval] = new_node;
 
-  omp_unset_lock(&write_lock);
-  
-  printf("        added: %s\n", str.c_str());
+  //omp_unset_lock(&write_lock);
+  //table_count++;
+  IncTableCount();
+  //printf("        added: %s\n", str.c_str());
   return true;
 }
   
@@ -284,7 +286,8 @@ bool HashTable::DeleteString(std::string str)
   
   ///free memory
 
-
+  //table_count--;
+  DecTableCount();
   return true;
 }
 /**************************************************************************//**
@@ -312,22 +315,36 @@ int HashTable::GetTableSize() { return size; }
  ******************************************************************************/  
 int HashTable::GetTableCount() 
 {
-
-  int count = 0;
-  
-  node* ptr;
-  
-  ///Check if table exists
-  if( hash_ptr == NULL)
-    return -1;
-  
-  ///Count existing values in the table  
-  for( int i = 0; i < GetTableSize(); i++)
-  {
-    for( ptr = hash_ptr->table[i]; ptr != NULL; ptr = ptr->next)
-      count++;
-  }
-    
-  return count; 
+  return table_count; 
 }
 
+void HashTable::IncTableCount()
+{
+# pragma omp critical(dataupdate)
+  table_count++;
+}
+void HashTable::DecTableCount()
+{
+# pragma omp critical(dataupdate)
+  table_count--;
+}
+/*Depricated version of GetTableCount:
+
+
+  int count = 0;
+
+  node* ptr;
+
+  ///Check if table exists
+    if( hash_ptr == NULL)
+        return -1;
+  
+          ///Count existing values in the table  
+            for( int i = 0; i < GetTableSize(); i++)
+              {
+                  for( ptr = hash_ptr->table[i]; ptr != NULL; ptr = ptr->next)
+                        count++;
+                          }
+  
+                            return count;
+  */

@@ -59,6 +59,9 @@
 #include "../inc/hashtable.h"
 #include <iostream>
 #include <sstream>
+#include <algorithm>
+#include <list>
+
 /******************************************************************************
  *
  * NAMESPACES
@@ -101,16 +104,17 @@ void Usage(char* prog_name);
  *****************************************************************************/
 int main(int argc, char ** argv)
 {
-  srand(time(NULL));
-  double start, finish, static_t, dynamic_t;  //Timing variables
-  node *ptr1, *ptr2, *ptr3, *ptr4;
-  int  c1,c2,c3,c4;
-
+  //srand(time(NULL));
+  double start, finish, serial_t, static_t, dynamic_t;  //Timing variables
+  //node *ptr1, *ptr2, *ptr3, *ptr4;
+  //int  count;
+  int listSIZE = 5000;
+  int i;
   int thread_count;  
   string temp;
-
+  string t;
   int chunk_size = 1;
-  
+  string strList[5000]; 
   if ( argc < 2 ) 
     Usage(argv[0]);
   thread_count = strtoll(argv[1], NULL, 10);
@@ -119,75 +123,73 @@ int main(int argc, char ** argv)
   if ( argc > 2 )
     chunk_size = strtoll(argv[2], NULL, 10);
 
-  //default is 10, but can input table size 
-  HashTable * ht1 = new HashTable();
-  //HashTable * ht2 = new HashTable(10000000);
-  HashTable * ht2 = new HashTable(2);
-
-
-  ifstream fin;
+  HashTable * ht1 = new HashTable(listSIZE);
+  HashTable * ht2 = new HashTable(listSIZE);
+  HashTable * ht3 = new HashTable(listSIZE);
+  for(i = 0; i < listSIZE; i++)
+    strList[i] = RandomString( rng(1, 10 ) ) + to_string(i);
+  //Serial solution
   start = omp_get_wtime( );
-ht2->AddString("adsfskfjds");
-ht2->AddString("fdadasd");
-ht2->AddString("jhjkj");
-ht2->AddString("ansdf");
-ht2->AddString("aasn");
-ht2->AddString("fdaa");
-ht2->AddString("asdfaa");
-ht2->AddString("anddsaffdfdaa");
-ht2->AddString("jdfssfdaaaa");
-ht2->AddString("andafnaadggfdgaaaa");
-ht2->AddString("gfdsgfgfgaaaa");
-ht2->AddString("hfghfhfghaaaaaaaaaa");
-
-#pragma omp parallel for schedule(dynamic, chunk_size) num_threads(thread_count) \
-  shared(ht2)
-  for(int i = 0; i < 4; i++)
+#pragma omp parallel for schedule(dynamic, 1) num_threads(1)
+  for( i = 0; i < listSIZE; i++)
   {
-    for(int j = 0; j < 1; j++)
-    {   
-        string t = "q";//RandomString( rng(1,50) );
-        //printf("%s\n", t.c_str());
-        //string t = s;
-        //cout << s;
-        ht2->AddString(t);
-        //    printf("failed to add: %s\n", t.c_str());
-        //else
-        //    printf("added: %s\n", t.c_str());
-    }
-    fin.close();
+   // t = RandomString( rng(1, 50) );
+  //  while(ht1->LookupString(t) != NULL)
+  //    ht1->AddString(to_string(i));//RandomString(rng( 1, 50 ) );
+    ht1->AddString(strList[i]);
+  }
+  finish = omp_get_wtime();
+  serial_t = finish-start;
+  //delete ht1;
+
+  //Static
+  start = omp_get_wtime();
+#pragma omp parallel for schedule(static, chunk_size) num_threads(thread_count)
+  for( i = 0; i < listSIZE; i++)
+  {
+    ht2->AddString(strList[i]);
+  }
+  finish = omp_get_wtime();
+  static_t = finish - start;
+
+  //Dynamic
+  start = omp_get_wtime( );
+#pragma omp parallel for schedule(dynamic, chunk_size) num_threads(thread_count) 
+  for( i = 0; i < listSIZE; i++)
+  {
+  // if(ht2->GetTableCount() < 5000)
+  // {
+   // do
+   // {
+   //   t = RandomString( rng(1, 50) );
+   // }while(ht->LookupString(t) != NULL);
+    //while(ht2->LookupString(t) != NULL)
+      //ht2->AddString(to_string(i));//RandomString(rng (1,50 ));
+      ht3->AddString(strList[i]);
+  //  }
   }
   finish = omp_get_wtime( );
   dynamic_t = finish - start;
 
-  c3 = ht2->GetTableCount();
+  //count = ht2->GetTableCount();
+ 
+  printf("counted %d items in Serial  Table\n", ht1->GetTableCount());
+  printf("counted %d items in Static  Table\n", ht2->GetTableCount());
+  printf("counted %d items in Dynamic Table\n", ht3->GetTableCount());
+
 
   
 
-  cout << "counted " << c3 << " item(s) in this table" << endl;
-  //cout << "counted " << c4 << " item(s) in this table" << endl;
-  
-  ///ptr1 should succeed, ptr2 & ptr3 fail.
-  cout << "found " << getPtr(ht2->LookupString("jhjkj")) << endl;
-  cout << "found " << getPtr(ht2->LookupString("andAgain")) << endl;
-  cout << "found " << getPtr(ht2->LookupString("aga")) << endl;
-  cout << "found " << getPtr(ht2->LookupString("q")) << endl;
-  //cout << "found " << getPtr(ptr2) << endl;
-  
-  
-  fin.open("reg.out");
-
-    while(fin >> temp)
-    {  
-        ptr4 = ht2->LookupString(temp);
-        if(getPtr(ptr4)!=("NULL"))
-        cout << "found " << getPtr(ptr4) << endl;
-    }
-
-  printf("Elapsed Time: %f\n", dynamic_t);
+  printf("Elapsed Serial  Time: %f\n",  serial_t);
+  printf("Elapsed Static  Time: %f (%d Threads, Chunk Size: %d)\n",
+          static_t, thread_count, chunk_size); 
+  printf("Elapsed Dynamic Time: %f (%d Threads, Chunk Size: %d)\n", 
+          dynamic_t, thread_count, chunk_size);
+  //delete ht1;
   delete ht1;
   delete ht2; 
-  return 0; 
+  delete ht3;
+   return 0; 
 }
 
 string getPtr(node *ptr)
@@ -204,10 +206,10 @@ string RandomString(int len)
    ///generate a random string here
    string str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy";
    int pos;
-   while(str.size() != len) 
+   while((int)str.size() != len) 
    {
-    pos = ((rand() % (str.size() - 1)));
-    str.erase (pos, 1);
+     pos = ((rand() % (str.size() - 1)));
+     str.erase (pos, 1);
    }
    return str;
 }
