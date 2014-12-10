@@ -4,9 +4,35 @@
 \usepackage{fullpage}
 \usepackage{wrapfig}
 \usepackage{float}
+\usepackage{amsmath}
 
 
 \graphicspath{ {img/} }
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
 \begin{document}
 
 \title{Program 4 Design and Analysis}
@@ -24,23 +50,132 @@ Following Foster's design methodology, we have a brief overview:
 \subsubsection{Partitioning}
         \begin{itemize}
             \item Reading values to be hashed
+            
+            In order to have the values hashed into the table, there must first be a list of values. In the shared memory test, 
+            an array is utilized to generate a list of random strings to be inserted into the hash table. This initialization of 
+            the list must occur first in the program in order to have the list available for the three tests: the serial runtime, 
+            the parallel runtime using static scheduling, and the parallel runtime using dynamic scheduling.
             \item Hashing
-            \item Sending
-            \item Recieving
+            
+            The following code overviews the actual Hashing method used in this program. the hash key is multiplied by 31 by 
+            shifting the previous hash value by 5, which is equivalent to multiplying by 2 to the 5th, then subtracting the hash value. 
+            This hash value is then modded by the Hash table size to place the hash key within range of the table indices.
+            \begin{lstlisting}
+unsigned int HashTable::Hash(std::string str)
+{
+  unsigned int hashval;
+
+  /// initialize hash to 0
+  hashval = 0;
+  char* t = const_cast<char*>(str.c_str());
+
+  /// Multiply old hash value by 31.
+  /// hashval << 5 = multiplying by 2^5 (32) minus hashval = 31.
+  /// Shifts are faster than multiplication while still doing what we
+  /// want to do. 
+  for(; *t != '\0'; t++)
+    hashval = *t + (hashval << 5) - hashval;
+
+  /// mod the hash value by the table size so it fits in the range.
+  return hashval % GetTableSize();
+}
+	    \end{lstlisting}
+            
+            \item Sending and Recieving
+            
+            Sending and Receiving are fairly trivial tasks in the omp implementation for the parallelization of this hash table.
             \item Inserting
+            
+            Inserting into the table will have interesting data dependency. In this implementation, we have assumed that no two 
+            strings being inserted into the table will be alike. In a real life situation, for instance, values would be hashed into 
+            a table using a unique hash key, or ID. That is to say, with a hash table that holds student records, each student would 
+            be inserted into the hash using their student ID as their hash key. Therefore, duplicate data would not be added into a 
+            hash table. 
+            
+            Since we operate on this assumption that multiple values will not occupy a given index of the hash table, no node of the 
+            hash table will be accessed by more than one task at any given time.
         \end{itemize}
 \subsubsection{Communication}
         \begin{itemize}
             \item Sharing data between computations
+            
+            Previously stated, the act of sharing between tasks is somewhat minimal. Each task will be handling different nodes of the 
+            hash table, so there is no issue of accessing and writing to the same node at a given point during the insertion phase. 
+            However, there is an issue of updating the total number of entries into the hash table. This is handled by placing a 
+            critical block around the two functions that handle the incrementation and decrementation of the table count, as seen here: 
+	    \begin{lstlisting}
+void HashTable::IncTableCount()
+{
+# pragma omp critical(dataupdate)
+  table_count++;
+}
+
+void HashTable::DecTableCount()
+{
+# pragma omp critical(dataupdate)
+  table_count--;
+}
+	    \end{lstlisting}
+	    
             \item Determine amount and pattern of communication
+            
+            Therefore, the amount of communication is determined. The only global communication among the tasks is to handle the updating of 
+            the table size.
         \end{itemize}
 \subsubsection{Aglomeration}
         \begin{itemize}
             \item Combine or group tasks to improve performance
+            
+            This section will analyze the tasks identified during the Partitioning section to determine how tasks can be grouped together: 
+            
+             \begin{itemize}
+		\item Reading values to be hashed
+		\item Hashing
+		\item Inserting
+		\item Update Table Count
+	    \end{itemize}
+		
+		Generating the values to be hashed needs to be done as its own task, in order to have the list of values to hash 
+		be the identical for each of the three runs.
+
+		Hashing and Inserting to the table can be combined into the same task. A hash key is generated based on the string 
+		being inserted into the table, and then the value is inserted into the table. By combining these two tasks, the 
+		entire loop of iterating through the values to be hashed can be parallelized. Updating Table Count is also grouped 
+		into this task block, as it needs to be done after every succesful insert.
         \end{itemize}
 \subsubsection{Mapping}
         \begin{itemize}
             \item Assign agglomerated tasks to threads/physical processors.
+            
+            The following code block details the three different tests and how the threads are mapped to the tasks. As stated, the 
+            shared memory solution for OMP is more or less trivial when it comes to mapping. The for loop is parallelized for the 
+            list of strings to be added to the hash, with each thread performing a chunk of the strings at a time. The data isn't 
+            sequential in any way, so the order of the strings being inserted should not be an issue.
+	    \begin{lstlisting}
+  ///Run and time the Serial solution
+  start = omp_get_wtime( );
+# pragma omp parallel for schedule(dynamic, 1) num_threads(1)
+  for( i = 0; i < list_size; i++)
+    ht1->AddString(strList[i]);
+  finish = omp_get_wtime();
+  serial_t = timeOMP(start, finish);
+
+  ///Run and time the Parallel (Static) solution
+  start = omp_get_wtime();
+# pragma omp parallel for schedule(static, chunk_size) num_threads(thread_count)
+  for( i = 0; i < list_size; i++)
+    ht2->AddString(strList[i]);
+  finish = omp_get_wtime();
+  static_t = timeOMP(start, finish);
+
+  ///Run and time the Parallel (Dynamic) solution
+  start = omp_get_wtime( );
+# pragma omp parallel for schedule(dynamic, chunk_size) num_threads(thread_count) 
+  for( i = 0; i < list_size; i++)
+    ht3->AddString(strList[i]);
+  finish = omp_get_wtime( );
+  dynamic_t = timeOMP(start, finish);
+	    \end{lstlisting}
         \end{itemize}
 
 
