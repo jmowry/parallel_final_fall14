@@ -77,6 +77,7 @@ using namespace std;
  ******************************************************************************/
 
 string getPtr(node *ptr);
+int testTable(HashTable * table, string filename, int rank, int num_workers);
 
 /**************************************************************************//**
  * @author Julian Brackins
@@ -98,6 +99,7 @@ int main(int argc, char ** argv)
   int input_size;
   int table_size;
   int insert_count;
+  int i;
 
   double start, finish;
 
@@ -143,7 +145,8 @@ int main(int argc, char ** argv)
     MPI_Bcast(&table_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
     
     start = MPI_Wtime();
-    while(fin >> temp_array)
+    i = 0;
+    while(i < input_size && fin >> temp_array)
     {
         //cout << temp_array << endl;
 
@@ -157,10 +160,21 @@ int main(int argc, char ** argv)
 
         //cout << hashval << endl;
         MPI_Send(temp_array, 30, MPI_CHAR,1 + hashval, 0, MPI_COMM_WORLD );
+        
+        i++;
     }
+
+    
+    MPI_Barrier(MPI_COMM_WORLD);
     finish = MPI_Wtime();
 
-    cout << finish - start << endl;
+    cout <<"Table created in " << finish - start << " seconds\n";
+   
+
+
+    filename = argv[3];
+
+    testTable(NULL, filename, rank, num_workers);
   }
 
 
@@ -188,7 +202,6 @@ int main(int argc, char ** argv)
             MPI_Test(&request, &recvflag, NULL);
             if((MPI_Wtime() - start) > 0.5)
             {
-                //cout << "illuminarty" << endl;
                 timedout = true;
                 break;
             }
@@ -203,8 +216,10 @@ int main(int argc, char ** argv)
 
     insert_count = table->GetTableCount();
     cout <<"Process " << rank << " inserted this many " << table->GetTableCount() << endl;
+   
 
-    
+    MPI_Barrier(MPI_COMM_WORLD);
+    testTable(table, "", rank, num_workers);
 
     delete table;
   }
@@ -222,4 +237,74 @@ string getPtr(node *ptr)
     return ptr->item;
   else
     return "NULL";
+}
+
+int testTable(HashTable* table, string filename, int rank, int num_workers)
+{
+  MPI_Request request;
+  int recvflag = 0;
+  double start;
+  bool timedout = false;
+  char temp_array[30];
+  int count = 0;
+  int hashval;
+
+  if(rank != 0)
+  {
+      while(!timedout)
+      {
+        start = MPI_Wtime();
+        MPI_Irecv(temp_array, 30, MPI_CHAR, 0 , 0 , MPI_COMM_WORLD, &request);
+
+        while(recvflag == 0)
+        {
+            MPI_Test(&request, &recvflag, NULL);
+            if((MPI_Wtime() - start) > 1)
+            {
+                timedout = true;
+                break;
+            }
+        }
+
+        recvflag = 0;
+        //cout << temp_array << " recieved" << endl;
+        
+        if(table->LookupString(temp_array))
+        {
+            count++;
+        }
+      }  
+    cout <<"Process " << rank << " found this many " << count << endl;
+  }
+  else
+  {
+    ifstream fin;
+
+    fin.open(filename);
+
+    if(!fin)
+    {
+        return -1;
+    }
+
+    while(fin >> temp_array)
+    {
+        //cout << temp_array << endl;
+
+        hashval = 0;
+        char* t = temp_array;
+        for(; *t != '\0'; t++)
+            hashval = *t + (hashval << 5) - hashval;
+
+        hashval = hashval % num_workers;
+        hashval = abs(hashval);
+
+        //cout << hashval << endl;
+        MPI_Send(temp_array, 30, MPI_CHAR,1 + hashval, 0, MPI_COMM_WORLD );
+    }
+
+  }
+
+
+  return count;
 }
