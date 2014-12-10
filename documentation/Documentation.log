@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.1)  10 DEC 2014 00:09
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.11.1)  10 DEC 2014 00:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -59,35 +59,49 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 Package: fullpage 1999/02/23 1.1 (PWD)
 \FP@margin=\skip43
 )
-(./Documentation.aux)
+(/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+\wrapoverhang=\dimen105
+\WF@size=\dimen106
+\c@WF@wrappedlines=\count88
+\WF@box=\box26
+\WF@everypar=\toks15
+Package: wrapfig 2003/01/31  v 3.6
+)
+(/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count89
+\float@exts=\toks16
+\float@box=\box27
+\@float@everytoks=\toks17
+\@floatcapt=\box28
+) (./Documentation.aux)
 \openout1 = `Documentation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count88
-\scratchdimen=\dimen105
-\scratchbox=\box26
-\nofMPsegments=\count89
-\nofMParguments=\count90
-\everyMPshowfont=\toks15
-\MPscratchCnt=\count91
-\MPscratchDim=\dimen106
-\MPnumerator=\count92
-\makeMPintoPDFobject=\count93
-\everyMPtoPDFconversion=\toks16
+\scratchcounter=\count90
+\scratchdimen=\dimen107
+\scratchbox=\box29
+\nofMPsegments=\count91
+\nofMParguments=\count92
+\everyMPshowfont=\toks18
+\MPscratchCnt=\count93
+\MPscratchDim=\dimen108
+\MPnumerator=\count94
+\makeMPintoPDFobject=\count95
+\everyMPtoPDFconversion=\toks19
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -137,80 +151,80 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 13.
+(Font)              <12> on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 13.
+(Font)              <8> on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 13.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 24.
+(Font)              <6> on input line 15.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 26.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 24.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 26.
 
 <img/chart1a.png, id=1, 761.09344pt x 445.665pt>
 File: img/chart1a.png Graphic file (type png)
  <use img/chart1a.png>
-Package pdftex.def Info: img/chart1a.png used on input line 49.
+Package pdftex.def Info: img/chart1a.png used on input line 54.
 (pdftex.def)             Requested size: 469.75502pt x 275.07858pt.
+ [1
 
-<img/chart1b.png, id=2, 753.5653pt x 445.665pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+<img/chart1b.png, id=13, 753.5653pt x 445.665pt>
 File: img/chart1b.png Graphic file (type png)
  <use img/chart1b.png>
-Package pdftex.def Info: img/chart1b.png used on input line 55.
+Package pdftex.def Info: img/chart1b.png used on input line 67.
 (pdftex.def)             Requested size: 469.75502pt x 277.8123pt.
-
-<img/chart2a.png, id=3, 764.8575pt x 453.94594pt>
+ [2 <./img/chart1a.png (PNG copy)>] <img/chart2a.png, id=17, 764.8575pt x 453.9
+4594pt>
 File: img/chart2a.png Graphic file (type png)
- <use img/chart2a.png>
-Package pdftex.def Info: img/chart2a.png used on input line 61.
-(pdftex.def)             Requested size: 469.75502pt x 278.80452pt.
 
-<img/chart2b.png, id=4, 760.34062pt x 447.92343pt>
+<use img/chart2a.png>
+Package pdftex.def Info: img/chart2a.png used on input line 81.
+(pdftex.def)             Requested size: 469.75502pt x 278.80452pt.
+ [3 <./img/chart1b.png (PNG copy)>]
+<img/chart2b.png, id=21, 760.34062pt x 447.92343pt>
 File: img/chart2b.png Graphic file (type png)
  <use img/chart2b.png>
-Package pdftex.def Info: img/chart2b.png used on input line 67.
+Package pdftex.def Info: img/chart2b.png used on input line 96.
 (pdftex.def)             Requested size: 469.75502pt x 276.74596pt.
 
-<img/chart3a.png, id=5, 764.8575pt x 446.41782pt>
+[4 <./img/chart2a.png (PNG copy)>]
+<img/chart3a.png, id=25, 764.8575pt x 446.41782pt>
 File: img/chart3a.png Graphic file (type png)
  <use img/chart3a.png>
-Package pdftex.def Info: img/chart3a.png used on input line 73.
+Package pdftex.def Info: img/chart3a.png used on input line 108.
 (pdftex.def)             Requested size: 469.75502pt x 274.1809pt.
 
-<img/chart3b.png, id=6, 764.10469pt x 447.17062pt>
+[5 <./img/chart2b.png (PNG copy)>]
+<img/chart3b.png, id=29, 764.10469pt x 447.17062pt>
 File: img/chart3b.png Graphic file (type png)
  <use img/chart3b.png>
-Package pdftex.def Info: img/chart3b.png used on input line 79.
+Package pdftex.def Info: img/chart3b.png used on input line 122.
 (pdftex.def)             Requested size: 469.75502pt x 274.90936pt.
 
-[1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2 <./img/chart1a.png (PNG
- copy)> <./img/chart1b.png (PNG copy)>] [3 <./img/chart2a.png (PNG copy)> <./im
-g/chart2b.png (PNG copy)>] [4 <./img/chart3a.png (PNG copy)> <./img/chart3b.png
- (PNG copy)>] [5] (./Documentation.aux) ) 
+[6 <./img/chart3a.png (PNG copy)>] [7 <./img/chart3b.png (PNG copy)>] [8]
+(./Documentation.aux) ) 
 Here is how much of TeX's memory you used:
- 1554 strings out of 493304
- 22393 string characters out of 6139871
- 81504 words of memory out of 5000000
- 5009 multiletter control sequences out of 15000+600000
+ 1682 strings out of 493304
+ 24033 string characters out of 6139871
+ 82119 words of memory out of 5000000
+ 5129 multiletter control sequences out of 15000+600000
  7895 words of font info for 28 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 37i,6n,23p,588b,234s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
-b>
-Output written on Documentation.pdf (5 pages, 255542 bytes).
+ 37i,6n,23p,588b,232s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Documentation.pdf (8 pages, 260396 bytes).
 PDF statistics:
- 50 PDF objects out of 1000 (max. 8388607)
- 30 compressed objects within 1 object stream
+ 61 PDF objects out of 1000 (max. 8388607)
+ 38 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

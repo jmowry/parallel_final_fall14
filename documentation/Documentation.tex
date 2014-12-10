@@ -2,13 +2,15 @@
 
 \usepackage{graphicx}
 \usepackage{fullpage}
+\usepackage{wrapfig}
+\usepackage{float}
 
 
 \graphicspath{ {img/} }
 \begin{document}
 
 \title{Program 4 Design and Analysis}
-\author{Julian Brackins, Ryan Feather, Joe Mowry \and Charles Bonn}
+\author{Julian Brackins, Ryan Feather, Joe Mowry and Charles Bonn}
 \date{12/9/2014}
 \maketitle
 
@@ -43,42 +45,85 @@ Following Foster's design methodology, we have a brief overview:
 
 
 \subsection{Performance Testing}
-\begin{figure}
+The following figures overview the timing analysis for the shared memory solution for our hash table.
+The raw data can be found in the timing analysis excel file in the documentation directory of
+our project.
+\begin{figure}[H]
   \caption{Timing Evaluation of increasing problem size}
   \centering
   \includegraphics[width=\textwidth]{chart1a}
+  \label{fig:chart1a}
 \end{figure}
 
-\begin{figure}
+Figure~\ref{fig:chart1a} displays the timing evaluation of the shared memory hash table as the problem 
+size is scaled up. In each run, the number of values added to the hash table are increased by a factor 
+of 10. The strings added to the hash table are randomized, and every string is unique, since identical 
+strings cannot be added to this hash table. As the problem size increases, the parallel solutions complete 
+the tasks of inserting into the table faster than the serial solution.
+
+\begin{figure}[H]
   \caption{Speedup / Efficiency Evaluation of increasing problem size}
   \centering
   \includegraphics[width=\textwidth]{chart1b}
+  \label{fig:chart1b}
 \end{figure}
 
-\begin{figure}
+Figure~\ref{fig:chart1b} is the analysis of the speedup and efficiency gained by using the parallel solutions, 
+both static and dynamic scheduling, on an increasing problem size. While we did observe in Figure~\ref{fig:chart1a} 
+that the two parallel solutions were consistently faster than the serial counterpart, the actual speedup and 
+efficiency observed as the problem size increases has a downward trend. Therefore, we can conclude that as the 
+problem size increases, the speedup and efficiency of the parallel solution decreases, despite an overall better 
+time performance.
+
+\begin{figure}[H]
   \caption{Timing Evaluation of increasing thread count}
   \centering
   \includegraphics[width=\textwidth]{chart2a}
+    \label{fig:chart2a}
 \end{figure}
 
-\begin{figure}
+Figure~\ref{fig:chart2a} observes the timing evaluation of the shared memory hash table as the amount of threads 
+increases. For smaller thread counts (2, 6 through around 60) the program overall has a better performance on the 
+parallel versions as opposed to the serial method, but for larger thread counts (80+), the program actually 
+performs better serially due to the amount of overhead from thread management. It should be noted that there is 
+a rather peculiar spike in runtime for the parallel methods when running the program with 4 threads. For whatever 
+reason, the program takes an incredibly long time when utilizing 4 threads, but returns to the expected trend 
+with all other thread counts.
+
+\begin{figure}[H]
   \caption{Speedup / Efficiency Evaluation of increasing thread count}
   \centering
   \includegraphics[width=\textwidth]{chart2b}
+    \label{fig:chart2b}
 \end{figure}
 
-\begin{figure}
+Figure~\ref{fig:chart2b} reflects this peculiar anomaly at a thread count of 4, but otherwise shows a mostly 
+downward trend of both speedup and efficiency as more threads are used in the program. According to the chart, 
+the Static scheduling method experiences the greatest speedup and efficiency at 2 threads. The Dynamic scheduling 
+method, while technically having the greatest speedup rating at 8 threads, is most efficient at 2 threads as well.
+
+\begin{figure}[H]
   \caption{Timing Evaluation of increasing chunk size}
   \centering
   \includegraphics[width=\textwidth]{chart3a}
+    \label{fig:chart3a}
 \end{figure}
 
-\begin{figure}
+Figure~\ref{fig:chart3a} details the timings of the hash table inserts when the chunk size is increased on the 
+parallel solutions. As this diagram illustrates, increasing chunk size has a somewhat noteworthy effect on the 
+amount of time it takes for the program to run. Curiously, however, the amount of time required to run the program 
+is basically identical over all tests as the chunk size increases. As long as the chunk size is greater than 1, the 
+parallel solutions observe a faster runtime than the serial method, although this faster runtime is identical even 
+as the chunk size increases.
+
+\begin{figure}[H]
   \caption{Speedup / Efficiency Evaluation of increasing chunk size}
   \centering
   \includegraphics[width=\textwidth]{chart3b}
+    \label{fig:chart3b}
 \end{figure}
 
+As a result of this observation, Figure~\ref{fig:chart3b} features a mostly horizontal trend in both speedup and efficiency as the chunk size given to each task increases in the parallel solution. 
 
 \section{Part 2 - Distributed memory}
 \subsection{Program Description}
