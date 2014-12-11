@@ -222,7 +222,7 @@ int main(int argc, char ** argv)
         while(recvflag == 0)
         {
             MPI_Test(&request, &recvflag, NULL);
-            if((MPI_Wtime() - start) > 0.5)
+            if((MPI_Wtime() - start) > 0.04)
             {
                 timedout = true;
                 break;
