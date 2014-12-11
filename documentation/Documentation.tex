@@ -280,31 +280,58 @@ Following Foster's design methodology, we have a brief overview:
 \subsubsection{Partitioning}
 For our distributed memory solution, as in our shared, we will be doing data-centric partitioning. We will assign to each piece of data (in this case the strings) the tasks of hashing that data and storing it into a table. 
 
-This will create a large number of tasks, much larger than our number of processors. There are no redundant computations, and each tak will be roughly the same size.
+This will create a large number of tasks, much larger than our number of processors. There are no redundant computations, and each take will be roughly the same size.
 
 \subsubsection{Communication}
-For each piece of data, in order to place it in a table, it must first be hashed according to the hash function. This is an example of local communication. Therfore, since the tasks are dependent, we can consolidate them into one single task, hashing and storing a value.
+For each piece of data, in order to place it in a table, it must first be hashed according to the hash function. This is an example of local communication. Therefore, since the tasks are dependent, we can consolidate them into one single task, hashing and storing a value.
 
 In addition, the tasks associated with a piece of data will work very independently. Very little global communication will be needed.
 
 Communication is balanced, minimized, and all tasks can be performed concurrently.
 
-\subsubsection{Aglomeration}
+\subsubsection{Agglomeration}
 As discussed in the last section, each piece of data can be consolidated into one combined operation.
 
-Other than that, there is not much agglomeration that can be done. Because the work associated with each piece of data is independint of the solution as a whole, and the locality of the table insert is minimal, we cannot group together tasks in a meaningful or advantageous way.
+Other than that, there is not much agglomeration that can be done. Because the work associated with each piece of data is independent of the solution as a whole, and the locality of the table insert is minimal, we cannot group together tasks in a meaningful or advantageous way.
 
 \subsubsection{Mapping}
 For the distributed memory solution, we will employ a producer-consumer structure. We will have one root thread that produces values from an input file, handing out the values to the consumer threads. Each consumer thread will take the piece of data, hash it, and place it in the table.
 
-It is very important that we balance the load that each consumer thread experiences, making sure that they are not overwhelemed with data that will make computation take longer or potentially fill up their table. At the same time, we want to make sure that the storing of data is determinstic, that way we can find the data in a later loopup operation. In order to do this, the data is hashed twice. Once by the root producer thread in order to determine which worker thread will get the data, and again by the worker to determine where in its table to place the data.
+It is very important that we balance the load that each consumer thread experiences, making sure that they are not overwhelmed with data that will make computation take longer or potentially fill up their table. At the same time, we want to make sure that the storing of data is deterministic, that way we can find the data in a later lookup operation. In order to do this, the data is hashed twice. Once by the root producer thread in order to determine which worker thread will get the data, and again by the worker to determine where in its table to place the data.
 
 
 
 \subsection{Performance Testing}
+In order to test the performance of the implementation, timing data is recorded by the program. The program is given a set number of random strings that it must hash into tables. It is then given another set of values that it will attempt to lookup in the created hash tables.
+
+As can be seen in Figure \ref{fig:dist_1}, increasing the problem size has a very direct correlation to the execution time.
+\begin{figure}[H]
+  \caption{Increasing Problem Size}
+  \centering
+  \includegraphics[width=\textwidth]{dist_1}
+    \label{fig:dist_1}
+\end{figure}
+The results show are not surprising considering the nature of the algorithm. Increasing the number of values hashed and stored means an increase in the amount of communication and computation.
+
+So how do these numbers look when applied to various sizes of the worker pool? As can be seen in Figure \ref{fig:dist_2}, we have a general increase in execution time as our worker pool increases. This unfortunately goes against the aims of the parallel implementation, as we would like to see an improvement in execution time. There are a few explanations for what causes this, but the leading cause is almost certainly the increase in communication as number of threads increases.
+
+\begin{figure}[H]
+  \caption{Time vs Number of Threads}
+  \centering
+  \includegraphics[width=\textwidth]{dist_2}
+    \label{fig:dist_2}
+\end{figure}
+
+And as can be seen in our last figure, Figure \ref{fig:dist_3}, the efficiency of our parallelism becomes very small for large numbers of threads.
+\begin{figure}[H]
+  \caption{Speedup / Efficiency Evaluation for Number of Threads}
+  \centering
+  \includegraphics[width=\textwidth]{dist_3}
+    \label{fig:dist_3}
+\end{figure}
 
 
-
+One improvement to the distributed implementation that might give better results would be to do communication from the root thread in batches. For example, only sending out values to a worker thread once the number of values ``sent'' is equal to some number. This would allow for less communication overall and reduce the amount of time that the root thread spends sending messages.
 
 
 \end{document}
